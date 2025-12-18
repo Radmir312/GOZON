@@ -5,11 +5,90 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GOZON"
         mc:Ignorable="d"
-        Title="LoginWindow" Height="450" Width="800">
+        Title="LoginWindow" Height="400" Width="500"
+        ResizeMode="NoResize">
     <Grid>
-        <TextBlock Grid.Row="1" Grid.Column="1" Text="Логин"/>
-        <Button x:Name="LoginButton" Content="Login" VerticalAlignment="Top" HorizontalAlignment="Left"/>
-        <TextBlock Text="a" FontSize="32" Margin="334,168,334,217"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70"/>
+            <RowDefinition Height="40"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="70"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="190"/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <TextBlock Text="Авторизация"
+                   Grid.ColumnSpan="2"
+                   FontSize="35"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   />
+
+        <Label Content="Логин" 
+               Grid.Row="2"
+               Grid.Column="0"
+               HorizontalAlignment="Right"
+               FontSize="20"
+               />
+
+        <TextBox x:Name="LoginTextBox"
+                 Grid.Row="2"
+                 Grid.Column="1"
+                 Background="#FFE6E0E0"
+                 HorizontalAlignment="Left"
+                 Margin="0,10,0,0"
+                 Width="200" 
+                 FontSize="18" 
+                 TextChanged="LoginTextBox_TextChanged"
+                 />
+
+        <Label Content="Пaроль" 
+                   Grid.Row="3"                   
+                   Grid.Column="0"
+                   HorizontalAlignment="Right"
+                   FontSize="20"
+                   />
+
+        <PasswordBox x:Name="PasswordBox"
+                   Grid.Row="3"
+                   Grid.Column="1"
+                   Background="#FFE6E0E0"
+                   HorizontalAlignment="Left"
+                   Margin="0,10,0,0"
+                   Width="200" 
+                   FontSize="18" 
+                   />
+
+        <Button x:Name="LoginButton" 
+                Grid.Row="4"
+                Grid.Column="1" 
+                Width="50"
+                Height="30"
+                Content="Login" 
+                HorizontalAlignment="Left" 
+                FontSize="20" 
+                FontFamily="Candara" 
+                
+                Click="LoginButton_Click" 
+                />
+
+        <TextBlock Width="200" Height="30"
+                   Grid.Row="4" 
+                   Grid.ColumnSpan="2" 
+                   Grid.RowSpan="2" 
+                   HorizontalAlignment="Center"
+                   VerticalAlignment="Center"
+                   >
+                <Hyperlink Click="RegisterLink_Click"
+                           Foreground="Blue"
+                           TextDecorations="None">
+                           Нет аккаунта? Зарегистрируйтесь
+                </Hyperlink>
+        </TextBlock>
 
     </Grid>
 </Window>

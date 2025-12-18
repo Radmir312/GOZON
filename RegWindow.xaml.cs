@@ -15,29 +15,23 @@ using System.Windows.Shapes;
 namespace GOZON
 {
     /// <summary>
-    /// Interaction logic for LoginWindow.xaml
+    /// Interaction logic for RegWindow.xaml
     /// </summary>
-    public partial class LoginWindow : Window
+    public partial class RegWindow : Window
     {
-        public LoginWindow()
+        public RegWindow()
         {
             InitializeComponent();
-
         }
 
-        private void LoginTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
 
         }
 
-        private void LoginButton_Click(object sender, RoutedEventArgs e)
+        private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
 
-        }
-        private void RegisterLink_Click(object sender, RoutedEventArgs e)
-        {
-            RegWindow regWindow = new RegWindow();
-            regWindow.Show();
         }
     }
 }
