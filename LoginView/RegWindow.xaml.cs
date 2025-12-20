@@ -1,17 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data.SQLite;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
-using System.Data.SQLite;
 
 namespace GOZON
 {
@@ -24,54 +14,63 @@ namespace GOZON
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-        //    string login = LoginTextBox.Text;
-        //    string password = PasswordBox.Password;
-        //    string fullName = FullNameTextBox.Text;
-        //    string email = EmailTextBox.Text;
+            string fullName = FullNameTextBox.Text.Trim();
+            string email = EmailTextBox.Text.Trim();
+            string login = LoginTextBox.Text.Trim();
+            string password = PasswordBox.Password;
+            string confirmPassword = ConfirmPasswordBox.Password;
 
-        //    if (string.IsNullOrWhiteSpace(login) ||
-        //        string.IsNullOrWhiteSpace(password) ||
-        //        string.IsNullOrWhiteSpace(fullName)) /*||
-        //        string.IsNullOrWhiteSpace(email));*/
-        //    {
-        //        MessageBox.Show("Заполни все поля, инвалид");
-        //        return;
-        //    }
+            if (string.IsNullOrWhiteSpace(fullName) ||
+                string.IsNullOrWhiteSpace(login) ||
+                string.IsNullOrWhiteSpace(password))
+            {
+                MessageBox.Show("Заполни все поля!");
+                return;
+            }
 
-            //using (var connection = Database.Open())
-            //using (var cmd = connection.CreateCommand())
-            //{
-            //    cmd.CommandText = @"
-            //        INSERT INTO Users (Login, Password, FullName, Email)
-            //        VALUES (@login, @password, @fullName, @email);
-            //    ";
+            if (password != confirmPassword)
+            {
+                MessageBox.Show("Пароли не совпадают.");
+                return;
+            }
 
-            //    cmd.Parameters.AddWithValue("@login", login);
-            //    cmd.Parameters.AddWithValue("@password", password);
-            //    cmd.Parameters.AddWithValue("@fullName", fullName);
-            //    cmd.Parameters.AddWithValue("@email", email);
+            using (var conn = Database.Open())
+            using (var cmd = conn.CreateCommand())
+            {
+                // Проверка уникальности логина
+                cmd.CommandText = "SELECT COUNT(*) FROM Users WHERE Login = @login";
+                cmd.Parameters.AddWithValue("@login", login);
+                long exists = (long)cmd.ExecuteScalar();
 
-        //        try
-        //        {
-        //            cmd.ExecuteNonQuery();
-        //            MessageBox.Show("Пользователь зарегистрирован, аккаунт удалить нельзя, мы будем закидывать вас спам расылками каждый час, живи теперь с этим");
-        //            Close();
-        //        }
-        //        catch (SQLiteException ex)
-        //        {
-        //            MessageBox.Show("Ошибка БД: " + ex.Message);
-        //        }
-        //    }
+                if (exists > 0)
+                {
+                    MessageBox.Show("Логин уже занят");
+                    return;
+                }
+
+                // Вставка нового пользователя
+                cmd.CommandText = @"INSERT INTO Users (Login, Password, FullName, Email) 
+                                    VALUES (@login, @password, @fullName, @email)";
+                cmd.Parameters.AddWithValue("@password", password);
+                cmd.Parameters.AddWithValue("@fullName", fullName);
+                cmd.Parameters.AddWithValue("@email", email);
+
+                try
+                {
+                    cmd.ExecuteNonQuery();
+                    MessageBox.Show("Пользователь зарегистрирован успешно!");
+                    this.Close();
+                }
+                catch (SQLiteException ex)
+                {
+                    MessageBox.Show("Ошибка БД: " + ex.Message);
+                }
+            }
         }
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            Close();
-        }
-
-        private void FullNameTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
+            this.Close();
         }
     }
 }

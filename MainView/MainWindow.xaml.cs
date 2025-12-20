@@ -23,6 +23,8 @@ namespace GOZON
         public MainWindow()
         {
             InitializeComponent();
+            Database.Init();
+
         }
     }
 }
