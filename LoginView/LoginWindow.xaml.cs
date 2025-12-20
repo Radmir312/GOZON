@@ -32,7 +32,8 @@ namespace GOZON
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
-
+            Dashboard dashboard = new Dashboard();
+            dashboard.Show();
         }
         private void RegisterLink_Click(object sender, RoutedEventArgs e)
         {

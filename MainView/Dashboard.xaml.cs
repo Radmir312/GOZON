@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GOZON.MainView;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -22,6 +23,8 @@ namespace GOZON
         public Dashboard()
         {
             InitializeComponent();
+            MainFrame.Navigate(new ProductsPage());
+            Manager.MainFrame = MainFrame;
         }
 
         private void MenuButton_Click(object sender, RoutedEventArgs e)

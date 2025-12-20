@@ -154,6 +154,7 @@
                        VerticalAlignment="Top"
                        Margin="50,40,0,0"/>
             </Grid>
+            <Frame Grid.Row="1" Name="MainFrame"> </Frame>
         </Grid>
     </Grid>
 </Window>
