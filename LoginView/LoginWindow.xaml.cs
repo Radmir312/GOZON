@@ -23,21 +23,27 @@ namespace GOZON
                 return;
             }
 
+            string passwordHash = PasswordHelper.Hash(password);
+
             using (var conn = Database.Open())
             using (var cmd = conn.CreateCommand())
             {
-                cmd.CommandText = @"SELECT COUNT(*) FROM Users 
-                                    WHERE Login = @login AND Password = @password";
+                cmd.CommandText = @"
+                    SELECT COUNT(*)
+                    FROM Users
+                    WHERE Login = @login AND PasswordHash = @passwordHash
+                ";
+
                 cmd.Parameters.AddWithValue("@login", login);
-                cmd.Parameters.AddWithValue("@password", password);
+                cmd.Parameters.AddWithValue("@passwordHash", passwordHash);
 
                 long count = (long)cmd.ExecuteScalar();
 
                 if (count == 1)
                 {
-                    Dashboard dashboard = new Dashboard(); // твой главный экран
+                    Dashboard dashboard = new Dashboard();
                     dashboard.Show();
-                    this.Close();
+                    Close();
                 }
                 else
                 {
@@ -46,15 +52,15 @@ namespace GOZON
             }
         }
 
-        private void LoginTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
         private void RegisterLink_Click(object sender, RoutedEventArgs e)
         {
-            RegWindow regWindow = new RegWindow();
-            regWindow.Show();
+            new RegWindow().Show();
         }
+
+        private void LoginTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+        
+        }
+
     }
 }

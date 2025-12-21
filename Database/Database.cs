@@ -30,87 +30,87 @@ namespace GOZON
             using (var cmd = conn.CreateCommand())
             {
                 cmd.CommandText = @"
-                CREATE TABLE IF NOT EXISTS Users (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Login TEXT NOT NULL UNIQUE,
-                    Password TEXT NOT NULL,
-                    FullName TEXT NOT NULL,
-                    Email TEXT,
-                    Role TEXT DEFAULT 'User',
-                    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
-                );
+                    -- Пользователи
+                    CREATE TABLE IF NOT EXISTS Users (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Login TEXT NOT NULL UNIQUE,
+                        PasswordHash TEXT NOT NULL,
+                        FullName TEXT NOT NULL,
+                        Email TEXT,
+                        Role TEXT DEFAULT 'User',
+                        CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP
+                    );
 
-                CREATE TABLE IF NOT EXISTS Warehouses (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Name TEXT NOT NULL,
-                    Location TEXT,
-                    Capacity INTEGER
-                );
+                    -- Склады
+                    CREATE TABLE IF NOT EXISTS Warehouses (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Name TEXT NOT NULL,
+                        Location TEXT
+                    );
 
-                CREATE TABLE IF NOT EXISTS Products (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Name TEXT NOT NULL,
-                    SKU TEXT UNIQUE,
-                    Description TEXT,
-                    Price REAL NOT NULL,
-                    Quantity INTEGER NOT NULL DEFAULT 0,
-                    WarehouseId INTEGER,
-                    FOREIGN KEY (WarehouseId) REFERENCES Warehouses(Id)
-                );
+                    -- Товары
+                    CREATE TABLE IF NOT EXISTS Products (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Name TEXT NOT NULL,
+                        SKU TEXT UNIQUE,
+                        Description TEXT,
+                        Price REAL NOT NULL,
+                        MinQuantity INTEGER DEFAULT 0
+                    );
 
-                CREATE TABLE IF NOT EXISTS Suppliers (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Name TEXT NOT NULL,
-                    Contact TEXT,
-                    Email TEXT,
-                    Phone TEXT,
-                    Address TEXT
-                );
+                    -- Остатки по складам
+                    CREATE TABLE IF NOT EXISTS Stock (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        ProductId INTEGER NOT NULL,
+                        WarehouseId INTEGER NOT NULL,
+                        Quantity INTEGER NOT NULL DEFAULT 0,
+                        UNIQUE(ProductId, WarehouseId),
+                        FOREIGN KEY (ProductId) REFERENCES Products(Id),
+                        FOREIGN KEY (WarehouseId) REFERENCES Warehouses(Id)
+                    );
 
-                CREATE TABLE IF NOT EXISTS Deliveries (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    ProductId INTEGER NOT NULL,
-                    SupplierId INTEGER NOT NULL,
-                    Quantity INTEGER NOT NULL,
-                    DeliveryDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (ProductId) REFERENCES Products(Id),
-                    FOREIGN KEY (SupplierId) REFERENCES Suppliers(Id)
-                );
+                    -- Поставщики
+                    CREATE TABLE IF NOT EXISTS Suppliers (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Name TEXT NOT NULL,
+                        ContactPerson TEXT,
+                        Phone TEXT,
+                        Email TEXT,
+                        Address TEXT
+                    );
 
-                CREATE TABLE IF NOT EXISTS Actions (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    UserId INTEGER,
-                    ActionType TEXT,
-                    Description TEXT,
-                    ActionDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (UserId) REFERENCES Users(Id)
-                );
+                    -- Движения товаров
+                    CREATE TABLE IF NOT EXISTS Movements (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        ProductId INTEGER NOT NULL,
+                        FromWarehouseId INTEGER,
+                        ToWarehouseId INTEGER,
+                        SupplierId INTEGER,
+                        Quantity INTEGER NOT NULL,
+                        MovementType TEXT NOT NULL, -- IN, OUT, MOVE
+                        UserId INTEGER,
+                        CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
 
-                CREATE TABLE IF NOT EXISTS Reports (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Title TEXT NOT NULL,
-                    Content TEXT,
-                    CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    CreatedBy INTEGER,
-                    FOREIGN KEY (CreatedBy) REFERENCES Users(Id)
-                );
+                        FOREIGN KEY (ProductId) REFERENCES Products(Id),
+                        FOREIGN KEY (FromWarehouseId) REFERENCES Warehouses(Id),
+                        FOREIGN KEY (ToWarehouseId) REFERENCES Warehouses(Id),
+                        FOREIGN KEY (SupplierId) REFERENCES Suppliers(Id),
+                        FOREIGN KEY (UserId) REFERENCES Users(Id)
+                    );
 
-                CREATE TABLE IF NOT EXISTS History (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Entity TEXT,
-                    EntityId INTEGER,
-                    UserId INTEGER,
-                    Change TEXT,
-                    ChangeDate DATETIME DEFAULT CURRENT_TIMESTAMP,
-                    FOREIGN KEY (UserId) REFERENCES Users(Id)
-                );
-
-                CREATE TABLE IF NOT EXISTS Settings (
-                    Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    Key TEXT NOT NULL UNIQUE,
-                    Value TEXT
-                );
-                ";
+                    -- История изменений
+                    CREATE TABLE IF NOT EXISTS History (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        Entity TEXT NOT NULL,
+                        EntityId INTEGER NOT NULL,
+                        Action TEXT NOT NULL,
+                        OldValue TEXT,
+                        NewValue TEXT,
+                        UserId INTEGER,
+                        CreatedAt DATETIME DEFAULT CURRENT_TIMESTAMP,
+                        FOREIGN KEY (UserId) REFERENCES Users(Id)
+                    );
+                    ";
 
                 cmd.ExecuteNonQuery();
             }

@@ -34,24 +34,29 @@ namespace GOZON
                 return;
             }
 
+            string passwordHash = PasswordHelper.Hash(password);
+
             using (var conn = Database.Open())
             using (var cmd = conn.CreateCommand())
             {
-                // Проверка уникальности логина
+                // проверка логина
                 cmd.CommandText = "SELECT COUNT(*) FROM Users WHERE Login = @login";
                 cmd.Parameters.AddWithValue("@login", login);
-                long exists = (long)cmd.ExecuteScalar();
 
+                long exists = (long)cmd.ExecuteScalar();
                 if (exists > 0)
                 {
                     MessageBox.Show("Логин уже занят");
                     return;
                 }
 
-                // Вставка нового пользователя
-                cmd.CommandText = @"INSERT INTO Users (Login, Password, FullName, Email) 
-                                    VALUES (@login, @password, @fullName, @email)";
-                cmd.Parameters.AddWithValue("@password", password);
+                // регистрация
+                cmd.CommandText = @"
+                    INSERT INTO Users (Login, PasswordHash, FullName, Email)
+                    VALUES (@login, @passwordHash, @fullName, @email)
+                ";
+
+                cmd.Parameters.AddWithValue("@passwordHash", passwordHash);
                 cmd.Parameters.AddWithValue("@fullName", fullName);
                 cmd.Parameters.AddWithValue("@email", email);
 
@@ -59,7 +64,7 @@ namespace GOZON
                 {
                     cmd.ExecuteNonQuery();
                     MessageBox.Show("Пользователь зарегистрирован успешно!");
-                    this.Close();
+                    Close();
                 }
                 catch (SQLiteException ex)
                 {
@@ -70,7 +75,7 @@ namespace GOZON
 
         private void CancelButton_Click(object sender, RoutedEventArgs e)
         {
-            this.Close();
+            Close();
         }
     }
 }
