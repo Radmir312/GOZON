@@ -142,18 +142,6 @@
                        VerticalAlignment="Center"
                        Margin="20,0,0,0"/>
             </Border>
-
-            <!-- Область контента -->
-            <Grid Grid.Row="1">
-                <Label x:Name="labelContent" 
-                       Content="Выберите пункт меню" 
-                       FontFamily="Arial" 
-                       FontSize="18"
-                       Foreground="#2F4F4F"
-                       HorizontalAlignment="Left"
-                       VerticalAlignment="Top"
-                       Margin="50,40,0,0"/>
-            </Grid>
             <Frame Grid.Row="1" Name="MainFrame"> </Frame>
         </Grid>
     </Grid>
