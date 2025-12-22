@@ -1,6 +1,7 @@
 ﻿using GOZON.MainView;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,21 +16,50 @@ using System.Windows.Shapes;
 
 namespace GOZON
 {
-    /// <summary>
-    /// Логика взаимодействия для Dashboard.xaml
-    /// </summary>
     public partial class Dashboard : Window
     {
         public Dashboard()
         {
             InitializeComponent();
-            MainFrame.Navigate(new ProductsPage());
+            MainFrame.Navigate(new ProductsPage()); // стартовая страница
             Manager.MainFrame = MainFrame;
         }
 
         private void MenuButton_Click(object sender, RoutedEventArgs e)
         {
-
+            if (sender is Button btn)
+            {
+                switch (btn.Content.ToString())
+                {
+                    case "Товары":
+                        MainFrame.Navigate(new ProductsPage());
+                        break;
+                    case "Склады":
+                        MainFrame.Navigate(new WarehousesPage());
+                        break;
+                    /*case "Поставки":
+                        MainFrame.Navigate(new DeliveriesPage()); 
+                        break;
+                    case "Поставщики":
+                        MainFrame.Navigate(new SuppliersPage()); 
+                        break;
+                    case "Действия":
+                        MainFrame.Navigate(new ActionsPage());
+                        break;
+                    case "Отчёты":
+                        MainFrame.Navigate(new ReportsPage());
+                        break;
+                    case "История":
+                        MainFrame.Navigate(new HistoryPage());
+                        break;
+                    case "Настройки":
+                        MainFrame.Navigate(new SettingsPage());
+                        break;*/
+                    default:
+                        MessageBox.Show("Страница не найдена");
+                        break;
+                }
+            }
         }
     }
 }
