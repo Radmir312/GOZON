@@ -39,11 +39,11 @@ namespace GOZON
                         break;
                     /*case "Поставки":
                         MainFrame.Navigate(new DeliveriesPage()); 
-                        break;
+                        break;*/
                     case "Поставщики":
                         MainFrame.Navigate(new SuppliersPage()); 
                         break;
-                    case "Действия":
+                    /*case "Действия":
                         MainFrame.Navigate(new ActionsPage());
                         break;
                     case "Отчёты":

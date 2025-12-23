@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace GOZON.Models
 {
-    public class Warehouse
+    public class Suppliers
     {
         public int Id { get; set; }
         public string Name { get; set; }

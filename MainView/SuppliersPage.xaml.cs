@@ -7,23 +7,23 @@ using System.Windows.Controls;
 
 namespace GOZON.MainView
 {
-    public partial class WarehousesPage : Page
+    public partial class SuppliersPage : Page
     {
-        public WarehousesPage()
+        public SuppliersPage()
         {
             InitializeComponent();
         }
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            LoadWarehouses();
+            LoadSuppliers();
         }
 
-        private void LoadWarehouses()
+        private void LoadSuppliers()
         {
             try
             {
-                var warehouses = new List<Suppliers>();
+                var Suppliers = new List<Suppliers>();
 
                 using (var conn = Database.Open())
                 using (var cmd = conn.CreateCommand())
@@ -43,7 +43,7 @@ namespace GOZON.MainView
                     {
                         while (reader.Read())
                         {
-                            warehouses.Add(new Suppliers
+                            Suppliers.Add(new Suppliers
                             {
                                 Id = reader.GetInt32(0),
                                 Name = reader.GetString(1),
@@ -54,7 +54,7 @@ namespace GOZON.MainView
                     }
                 }
 
-                WarehousesGrid.ItemsSource = warehouses;
+                SuppliersGrid.ItemsSource = Suppliers;
             }
             catch (Exception ex)
             {
@@ -64,10 +64,10 @@ namespace GOZON.MainView
 
         private void Refresh_Click(object sender, RoutedEventArgs e)
         {
-            LoadWarehouses();
+            LoadSuppliers();
         }
 
-        private void AddWarehouse_Click(object sender, RoutedEventArgs e)
+        private void AddSuppliers_Click(object sender, RoutedEventArgs e)
         {
             try
             {
@@ -81,7 +81,7 @@ namespace GOZON.MainView
                     cmd.ExecuteNonQuery();
 
                     MessageBox.Show("Склад добавлен");
-                    LoadWarehouses();
+                    LoadSuppliers();
                 }
             }
             catch (Exception ex)
