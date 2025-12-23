@@ -22,6 +22,7 @@
                 <DataGridTextColumn Header="Артикул" Binding="{Binding SKU}" Width="100"/>
                 <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="150"/>
                 <DataGridTextColumn Header="Цена" Binding="{Binding Price}" Width="80"/>
+                <DataGridTextColumn Header="Цена" Binding="{Binding Warehouse}" Width="80"/>
                 <DataGridTextColumn Header="Кол-во" Binding="{Binding TotalQuantity}" Width="60"/>
             </DataGrid.Columns>
         </DataGrid>
