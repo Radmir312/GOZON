@@ -23,7 +23,7 @@ namespace GOZON.MainView
         {
             try
             {
-                var warehouses = new List<Suppliers>();
+                var warehouses = new List<Warehouse>();
 
                 using (var conn = Database.Open())
                 using (var cmd = conn.CreateCommand())
@@ -43,7 +43,7 @@ namespace GOZON.MainView
                     {
                         while (reader.Read())
                         {
-                            warehouses.Add(new Suppliers
+                            warehouses.Add(new Warehouse
                             {
                                 Id = reader.GetInt32(0),
                                 Name = reader.GetString(1),

@@ -11,20 +11,28 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Кнопки Добавить и Обновить -->
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
-            <Button Content="Добавить поставщика" Click="AddSuppliers_Click" Width="140" Margin="0,0,5,0"/>
-            <Button Content="Обновить" Click="Refresh_Click" Width="80"/>
+            <Button Content="Добавить поставщика"
+                    Click="AddSuppliers_Click"
+                    Width="160"
+                    Margin="0,0,5,0"/>
+            <Button Content="Обновить"
+                    Click="Refresh_Click"
+                    Width="80"/>
         </StackPanel>
 
-        <!-- Таблица складов -->
-        <DataGrid x:Name="SuppliersGrid" Grid.Row="1" Margin="10"
-                  AutoGenerateColumns="False" IsReadOnly="True">
+        <DataGrid x:Name="SuppliersGrid"
+                  Grid.Row="1"
+                  Margin="10"
+                  AutoGenerateColumns="False"
+                  IsReadOnly="True">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                 <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="150"/>
-                <DataGridTextColumn Header="Локация" Binding="{Binding Location}" Width="150"/>
-                <DataGridTextColumn Header="Общее кол-во" Binding="{Binding TotalStock}" Width="100"/>
+                <DataGridTextColumn Header="Контакт" Binding="{Binding ContactPerson}" Width="150"/>
+                <DataGridTextColumn Header="Телефон" Binding="{Binding Phone}" Width="120"/>
+                <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="180"/>
+                <DataGridTextColumn Header="Адрес" Binding="{Binding Address}" Width="200"/>
             </DataGrid.Columns>
         </DataGrid>
     </Grid>

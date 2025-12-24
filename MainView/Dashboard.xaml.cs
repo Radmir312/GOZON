@@ -37,14 +37,14 @@ namespace GOZON
                     case "Склады":
                         MainFrame.Navigate(new WarehousesPage());
                         break;
-                    /*case "Поставки":
+                    case "Поставки":
                         MainFrame.Navigate(new DeliveriesPage()); 
-                        break;*/
+                        break;
                     case "Поставщики":
                         MainFrame.Navigate(new SuppliersPage()); 
                         break;
-                    /*case "Действия":
-                        MainFrame.Navigate(new ActionsPage());
+                    case "Действия":
+                        MainFrame.Navigate(new MovementsPage());
                         break;
                     case "Отчёты":
                         MainFrame.Navigate(new ReportsPage());
@@ -54,7 +54,7 @@ namespace GOZON
                         break;
                     case "Настройки":
                         MainFrame.Navigate(new SettingsPage());
-                        break;*/
+                        break;
                     default:
                         MessageBox.Show("Страница не найдена");
                         break;

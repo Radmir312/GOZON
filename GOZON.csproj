@@ -107,17 +107,32 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Database\Database.cs" />
+    <Compile Include="MainView\MovementsPage.xaml.cs">
+      <DependentUpon>MovementsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainView\Dashboard.xaml.cs">
       <DependentUpon>Dashboard.xaml</DependentUpon>
     </Compile>
     <Compile Include="LoginView\RegWindow.xaml.cs">
       <DependentUpon>RegWindow.xaml</DependentUpon>
     </Compile>
+    <Page Include="MainView\MovementsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainView\Dashboard.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="LoginView\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainView\DeliveriesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainView\HistoryPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -132,11 +147,25 @@
     <Compile Include="LoginView\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainView\DeliveriesPage.xaml.cs">
+      <DependentUpon>DeliveriesPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView\HistoryPage.xaml.cs">
+      <DependentUpon>HistoryPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainView\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
     <Page Include="LoginView\RegWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainView\ReportsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainView\SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -154,6 +183,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MainView\ReportsPage.xaml.cs">
+      <DependentUpon>ReportsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MainView\SettingsPage.xaml.cs">
+      <DependentUpon>SettingsPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="MainView\SuppliersPage.xaml.cs">
       <DependentUpon>SuppliersPage.xaml</DependentUpon>
     </Compile>
@@ -164,9 +199,16 @@
       <DependentUpon>ProductsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Manager.cs" />
+    <Compile Include="Models\Delivery.cs" />
+    <Compile Include="Models\History.cs" />
+    <Compile Include="Models\Movement.cs" />
     <Compile Include="Models\Product.cs" />
+    <Compile Include="Models\Report.cs" />
+    <Compile Include="Models\Settings.cs" />
+    <Compile Include="Models\StockItem.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Suppliers.cs" />
+    <Compile Include="Models\Warehouse.cs" />
     <Compile Include="Passwordefence.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>

@@ -23,42 +23,44 @@ namespace GOZON.MainView
         {
             try
             {
-                var Suppliers = new List<Suppliers>();
+                var suppliers = new List<Supplier>();
 
                 using (var conn = Database.Open())
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
                         SELECT 
-                            w.Id,
-                            w.Name,
-                            w.Location,
-                            COALESCE(SUM(s.Quantity), 0) as TotalStock
-                        FROM Warehouses w
-                        LEFT JOIN Stock s ON w.Id = s.WarehouseId
-                        GROUP BY w.Id
-                        ORDER BY w.Name";
+                            Id,
+                            Name,
+                            ContactPerson,
+                            Phone,
+                            Email,
+                            Address
+                        FROM Suppliers
+                        ORDER BY Name";
 
                     using (var reader = cmd.ExecuteReader())
                     {
                         while (reader.Read())
                         {
-                            Suppliers.Add(new Suppliers
+                            suppliers.Add(new Supplier
                             {
                                 Id = reader.GetInt32(0),
                                 Name = reader.GetString(1),
-                                Location = reader.IsDBNull(2) ? "" : reader.GetString(2),
-                                TotalStock = reader.GetInt32(3)
+                                ContactPerson = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                                Phone = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                                Email = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                                Address = reader.IsDBNull(5) ? "" : reader.GetString(5)
                             });
                         }
                     }
                 }
 
-                SuppliersGrid.ItemsSource = Suppliers;
+                SuppliersGrid.ItemsSource = suppliers;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ошибка загрузки складов: " + ex.Message);
+                MessageBox.Show("Ошибка загрузки поставщиков: " + ex.Message);
             }
         }
 
@@ -75,18 +77,17 @@ namespace GOZON.MainView
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO Warehouses (Name, Location)
-                        VALUES ('Новый склад', '')";
+                        INSERT INTO Suppliers (Name, ContactPerson, Phone, Email, Address)
+                        VALUES ('Новый поставщик', '', '', '', '')";
 
                     cmd.ExecuteNonQuery();
-
-                    MessageBox.Show("Склад добавлен");
-                    LoadSuppliers();
                 }
+
+                LoadSuppliers();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Ошибка добавления склада: " + ex.Message);
+                MessageBox.Show("Ошибка добавления поставщика: " + ex.Message);
             }
         }
     }
