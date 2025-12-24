@@ -1,4 +1,4 @@
-﻿<Page x:Class="GOZON.MainView.SuppliersPage"
+﻿<Page x:Class="GOZON.Views.Main.Windows.SuppliersPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       Title="Поставщики"
@@ -13,11 +13,21 @@
 
         <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
             <Button Content="Добавить поставщика"
-                    Click="AddSuppliers_Click"
+                    Click="AddSupplier_Click"
                     Width="160"
+                    Margin="0,0,5,0"/>
+            <Button x:Name="EditButton"
+                    Content="Редактировать"
+                    Click="EditSupplier_Click"
+                    Width="100"
                     Margin="0,0,5,0"/>
             <Button Content="Обновить"
                     Click="Refresh_Click"
+                    Width="80"
+                    Margin="0,0,5,0"/>
+            <Button x:Name="DeleteButton"
+                    Content="Удалить"
+                    Click="DeleteSupplier_Click"
                     Width="80"/>
         </StackPanel>
 
@@ -25,7 +35,8 @@
                   Grid.Row="1"
                   Margin="10"
                   AutoGenerateColumns="False"
-                  IsReadOnly="True">
+                  IsReadOnly="True"
+                  SelectionChanged="SuppliersGrid_SelectionChanged">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/>
                 <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="150"/>

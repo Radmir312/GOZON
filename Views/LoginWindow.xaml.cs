@@ -3,7 +3,7 @@ using System.Data.SQLite;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace GOZON
+namespace GOZON.Views
 {
     public partial class LoginWindow : Window
     {

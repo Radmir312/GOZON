@@ -5,7 +5,7 @@ using System.Data.SQLite;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace GOZON.MainView
+namespace GOZON.Views.Main.Windows
 {
     public partial class MovementsPage : Page
     {
@@ -185,20 +185,38 @@ namespace GOZON.MainView
 
         private void CreateIncoming_Click(object sender, RoutedEventArgs e)
         {
-            // Открыть окно создания прихода
-            MessageBox.Show("Создание прихода на склад - здесь будет форма");
+            // Используем существующее окно AddDeliveryWindow для прихода товара
+            var window = new AddDeliveryWindow();
+            if (window.ShowDialog() == true)
+            {
+                MessageBox.Show("Приход товара успешно оформлен", "Успех",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                LoadMovements();
+            }
         }
 
         private void CreateOutgoing_Click(object sender, RoutedEventArgs e)
         {
-            // Открыть окно создания отгрузки
-            MessageBox.Show("Создание отгрузки со склада - здесь будет форма");
+            // Создаем окно для отгрузки товара
+            var window = new OutgoingMovementWindow();
+            if (window.ShowDialog() == true)
+            {
+                MessageBox.Show("Отгрузка товара успешно оформлена", "Успех",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                LoadMovements();
+            }
         }
 
         private void CreateTransfer_Click(object sender, RoutedEventArgs e)
         {
-            // Открыть окно создания перемещения
-            MessageBox.Show("Создание перемещения между складами - здесь будет форма");
+            // Создаем окно для перемещения товара
+            var window = new TransferMovementWindow();
+            if (window.ShowDialog() == true)
+            {
+                MessageBox.Show("Перемещение товара успешно оформлено", "Успех",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                LoadMovements();
+            }
         }
     }
 }

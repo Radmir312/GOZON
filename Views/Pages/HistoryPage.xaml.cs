@@ -5,7 +5,7 @@ using System.Data.SQLite;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace GOZON.MainView
+namespace GOZON.Views.Main.Windows
 {
     public partial class HistoryPage : Page
     {

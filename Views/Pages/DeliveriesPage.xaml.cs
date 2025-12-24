@@ -5,7 +5,7 @@ using System.Data.SQLite;
 using System.Windows;
 using System.Windows.Controls;
 
-namespace GOZON.MainView
+namespace GOZON.Views.Main.Windows
 {
     public partial class DeliveriesPage : Page
     {
@@ -75,11 +75,13 @@ namespace GOZON.MainView
 
         private void AddDelivery_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show(
-                "Тут позже будет нормальное окно добавления поставки\n" +
-                "(товар + поставщик + склад + количество)",
-                "Пока заглушка"
-            );
+            var window = new AddDeliveryWindow();
+            if (window.ShowDialog() == true)
+            {
+                MessageBox.Show("Поставка успешно добавлена", "Успех",
+                    MessageBoxButton.OK, MessageBoxImage.Information);
+                LoadDeliveries();
+            }
         }
     }
 }

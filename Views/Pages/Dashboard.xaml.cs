@@ -1,4 +1,5 @@
-﻿using GOZON.MainView;
+﻿using GOZON.Views.Main.Windows;
+using GOZON.Views.Pages;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -12,7 +13,7 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using System.Windows.Shapes;        
 
 namespace GOZON
 {

@@ -107,36 +107,64 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Database\Database.cs" />
-    <Compile Include="MainView\MovementsPage.xaml.cs">
+    <Compile Include="Views\Windows\AddDeliveryWindow.xaml.cs">
+      <DependentUpon>AddDeliveryWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\AddEditProductWindow.xaml.cs">
+      <DependentUpon>AddEditProductWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\AddEditSupplierWindow.xaml.cs">
+      <DependentUpon>AddEditSupplierWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Windows\AddEditWarehouseWindow.xaml.cs">
+      <DependentUpon>AddEditWarehouseWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\MovementsPage.xaml.cs">
       <DependentUpon>MovementsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainView\Dashboard.xaml.cs">
+    <Compile Include="Views\Pages\Dashboard.xaml.cs">
       <DependentUpon>Dashboard.xaml</DependentUpon>
     </Compile>
-    <Compile Include="LoginView\RegWindow.xaml.cs">
+    <Compile Include="Views\RegWindow.xaml.cs">
       <DependentUpon>RegWindow.xaml</DependentUpon>
     </Compile>
-    <Page Include="MainView\MovementsPage.xaml">
+    <Page Include="Views\Windows\AddDeliveryWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainView\Dashboard.xaml">
+    <Page Include="Views\Windows\AddEditProductWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="LoginView\LoginWindow.xaml">
+    <Page Include="Views\Windows\AddEditSupplierWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainView\DeliveriesPage.xaml">
+    <Page Include="Views\Windows\AddEditWarehouseWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainView\HistoryPage.xaml">
+    <Page Include="Views\Pages\MovementsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainView\MainWindow.xaml">
+    <Page Include="Views\Pages\Dashboard.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LoginWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\DeliveriesPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\HistoryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -144,58 +172,72 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="LoginView\LoginWindow.xaml.cs">
+    <Compile Include="Views\LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainView\DeliveriesPage.xaml.cs">
+    <Compile Include="Views\Pages\DeliveriesPage.xaml.cs">
       <DependentUpon>DeliveriesPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainView\HistoryPage.xaml.cs">
+    <Compile Include="Views\Pages\HistoryPage.xaml.cs">
       <DependentUpon>HistoryPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainView\MainWindow.xaml.cs">
+    <Compile Include="Views\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="LoginView\RegWindow.xaml">
+    <Page Include="Views\RegWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainView\ReportsPage.xaml">
+    <Page Include="Views\Windows\OutgoingMovementWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainView\SettingsPage.xaml">
+    <Page Include="Views\Pages\ReportsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="MainView\SuppliersPage.xaml">
+    <Page Include="Views\Pages\SettingsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\SuppliersPage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MainView\WarehousePage.xaml">
+    <Page Include="Views\Windows\TransferMovementWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Pages\WarehousePage.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="MainView\ProductsPage.xaml">
+    <Page Include="Views\Pages\ProductsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainView\ReportsPage.xaml.cs">
+    <Compile Include="Views\Windows\OutgoingMovementWindow.xaml.cs">
+      <DependentUpon>OutgoingMovementWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\ReportsPage.xaml.cs">
       <DependentUpon>ReportsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainView\SettingsPage.xaml.cs">
+    <Compile Include="Views\Pages\SettingsPage.xaml.cs">
       <DependentUpon>SettingsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainView\SuppliersPage.xaml.cs">
+    <Compile Include="Views\Pages\SuppliersPage.xaml.cs">
       <DependentUpon>SuppliersPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainView\WarehousePage.xaml.cs">
+    <Compile Include="Views\Windows\TransferMovementWindow.xaml.cs">
+      <DependentUpon>TransferMovementWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\Pages\WarehousePage.xaml.cs">
       <DependentUpon>WarehousePage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainView\ProductsPage.xaml.cs">
+    <Compile Include="Views\Pages\ProductsPage.xaml.cs">
       <DependentUpon>ProductsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Manager.cs" />
@@ -237,6 +279,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
