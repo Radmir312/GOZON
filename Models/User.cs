@@ -1,20 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.Mime.MediaTypeNames;
-
+﻿// User.cs
 namespace GOZON.Models
 {
     public class User
     {
         public int Id { get; set; }
-        public int Login { get; set; }
-        public int PasswordHash { get; set; }
-        public int FullName { get; set; }
-        public int Email { get; set; }
-        public int Role { get; set; }
-        public int CreatedAt { get; set; }
+        public string Login { get; set; } 
+        public string FullName { get; set; } 
+        public string Email { get; set; } 
     }
 }

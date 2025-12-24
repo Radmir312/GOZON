@@ -1,65 +1,74 @@
-﻿using GOZON.Views.Main.Windows;
+﻿using GOZON.Views;
+using GOZON.Views.Main.Windows;
 using GOZON.Views.Pages;
-using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;        
 
 namespace GOZON
 {
+
     public partial class Dashboard : Window
     {
         public Dashboard()
         {
             InitializeComponent();
-            MainFrame.Navigate(new ProductsPage()); // стартовая страница
-            Manager.MainFrame = MainFrame;
+            InitializeUserInfo();
+            NavigateToPage(new ProductsPage());
+        }
+
+        private void InitializeUserInfo()
+        {
+            // Отображаем ФИО и логин пользователя
+            UserFullNameLabel.Text = SessionManager.CurrentUserFullName;
+            UserLoginLabel.Text = $"Логин: {SessionManager.CurrentUserLogin}";
+        }
+
+        private void NavigateToPage(Page page)
+        {
+            MainFrame.Navigate(page);
+        }
+
+        private void LogoutButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Логируем выход
+            HistoryLogger.Log("User", SessionManager.CurrentUserId, "LOGOUT",
+                $"Пользователь {SessionManager.CurrentUserLogin} вышел из системы");
+
+            SessionManager.Logout();
+
+            var loginWindow = new LoginWindow();
+            loginWindow.Show();
+            this.Close();
         }
 
         private void MenuButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn)
+            var button = sender as Button;
+            if (button == null) return;
+
+            switch (button.Content.ToString())
             {
-                switch (btn.Content.ToString())
-                {
-                    case "Товары":
-                        MainFrame.Navigate(new ProductsPage());
-                        break;
-                    case "Склады":
-                        MainFrame.Navigate(new WarehousesPage());
-                        break;
-                    case "Поставки":
-                        MainFrame.Navigate(new DeliveriesPage()); 
-                        break;
-                    case "Поставщики":
-                        MainFrame.Navigate(new SuppliersPage()); 
-                        break;
-                    case "Действия":
-                        MainFrame.Navigate(new MovementsPage());
-                        break;
-                    case "Отчёты":
-                        MainFrame.Navigate(new ReportsPage());
-                        break;
-                    case "История":
-                        MainFrame.Navigate(new HistoryPage());
-                        break;
-                    case "Настройки":
-                        MainFrame.Navigate(new SettingsPage());
-                        break;
-                    default:
-                        MessageBox.Show("Страница не найдена");
-                        break;
-                }
+                case "Товары":
+                    NavigateToPage(new ProductsPage());
+                    break;
+                case "Поставки":
+                    NavigateToPage(new DeliveriesPage());
+                    break;
+                case "Поставщики":
+                    NavigateToPage(new SuppliersPage());
+                    break;
+                case "Склады":
+                    NavigateToPage(new WarehousesPage());
+                    break;
+                case "Движения":
+                    NavigateToPage(new MovementsPage());
+                    break;
+                case "Отчёты":
+                    NavigateToPage(new ReportsPage());
+                    break;
+                case "История":
+                    NavigateToPage(new HistoryPage());
+                    break;
             }
         }
     }

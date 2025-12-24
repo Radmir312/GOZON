@@ -107,6 +107,8 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Database\Database.cs" />
+    <Compile Include="HistoryLogger.cs" />
+    <Compile Include="SessionManager.cs" />
     <Compile Include="Views\Windows\AddDeliveryWindow.xaml.cs">
       <DependentUpon>AddDeliveryWindow.xaml</DependentUpon>
     </Compile>

@@ -28,8 +28,9 @@ namespace GOZON.Views
             using (var conn = Database.Open())
             using (var cmd = conn.CreateCommand())
             {
+                // ИЗМЕНЕНИЕ: Запрашиваем ВСЕ данные пользователя, а не только COUNT
                 cmd.CommandText = @"
-                    SELECT COUNT(*)
+                    SELECT Id, Login, FullName, Role, PasswordHash
                     FROM Users
                     WHERE Login = @login AND PasswordHash = @passwordHash
                 ";
@@ -37,17 +38,29 @@ namespace GOZON.Views
                 cmd.Parameters.AddWithValue("@login", login);
                 cmd.Parameters.AddWithValue("@passwordHash", passwordHash);
 
-                long count = (long)cmd.ExecuteScalar();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    if (reader.Read())
+                    {
+                        // ВАЖНО: Инициализируем сессию с данными пользователя!
+                        int userId = Convert.ToInt32(reader["Id"]);
+                        string userLogin = reader["Login"].ToString();
+                        string fullName = reader["FullName"].ToString();
+                        string role = reader["Role"].ToString();
 
-                if (count == 1)
-                {
-                    Dashboard dashboard = new Dashboard();
-                    dashboard.Show();
-                    Close();
-                }
-                else
-                {
-                    MessageBox.Show("Неверный логин или пароль.");
+                        SessionManager.InitializeSession(userId, userLogin, fullName, role);
+
+                        // Покажем отладочное сообщение
+                        MessageBox.Show($"Вход выполнен!\nЛогин: {userLogin}\nФИО: {fullName}", "Успех");
+
+                        Dashboard dashboard = new Dashboard();
+                        dashboard.Show();
+                        this.Close();
+                    }
+                    else
+                    {
+                        MessageBox.Show("Неверный логин или пароль.");
+                    }
                 }
             }
         }
@@ -59,8 +72,7 @@ namespace GOZON.Views
 
         private void LoginTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
-        
-        }
 
+        }
     }
 }
