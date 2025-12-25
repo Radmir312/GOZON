@@ -11,15 +11,33 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <!-- Кнопки отчётов -->
-        <StackPanel Grid.Row="0" Orientation="Horizontal" Margin="10">
-            <Button Content="Остатки товаров" Click="Refresh_Click" Width="120" Margin="0,0,5,0"/>
-            <Button Content="Движения за 30 дней" Click="GenerateMovementsReport_Click" Width="150" Margin="0,0,5,0"/>
-            <Button Content="Низкие остатки" Click="GenerateLowStockReport_Click" Width="120" Margin="0,0,5,0"/>
-        </StackPanel>
+        <Button
+            Grid.Row="0"
+            Content="Обновить"
+            Click="Refresh_Click"
+            HorizontalAlignment="Left"
+            Height="Auto"
+            Width="120" 
+            Margin="10,10,5,0"
+         />
 
         <!-- Таблица отчёта -->
         <DataGrid x:Name="ReportsGrid" Grid.Row="1" Margin="10"
-                  AutoGenerateColumns="True" IsReadOnly="True"/>
+                  AutoGenerateColumns="False" IsReadOnly="True">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="ID" Binding="{Binding Id}" Width="50"/> 
+                <DataGridTextColumn Header="Товар" Binding="{Binding ProductName}" Width="150"/> 
+                <DataGridTextColumn Header="Откуда" Binding="{Binding FromWarehouse}" Width="100"/> 
+                <DataGridTextColumn Header="Куда" Binding="{Binding ToWarehouse}" Width="100"/> 
+                <DataGridTextColumn Header="Поставщик" Binding="{Binding SupplierName}" Width="120"/> 
+                <DataGridTextColumn Header="Кол-во" Binding="{Binding Quantity}" Width="80"/>  
+                <DataGridTextColumn Header="Тип перемещения" Binding="{Binding MovementType}" Width="80"/>  
+                <DataGridTextColumn Header="Пользователь" Binding="{Binding UserName}" Width="120"/>  
+                <DataGridTextColumn Header="Тип" Binding="{Binding TypeDisplay}" Width="80"/> 
+                <DataGridTextColumn Header="Дата" 
+                    Binding="{Binding CreatedAt, StringFormat=dd.MM.yyyy HH:mm}" 
+                    Width="120"/>
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
 </Page>

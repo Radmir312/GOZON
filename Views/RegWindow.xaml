@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GOZON"
         mc:Ignorable="d"
-        Title="Регистрация" Height="600" Width="500"
+        Title="Регистрация" Height="550" Width="500"
         ResizeMode="NoResize">
 
     <Grid>
@@ -27,6 +27,11 @@
         </Grid.ColumnDefinitions>
 
         <!-- Заголовок -->
+        <TextBlock Text="Регистрация"
+                   Grid.ColumnSpan="2"
+                   FontSize="35"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"/>
 
         <!-- Полное имя -->
         <Label Content="Полное имя" 
@@ -61,6 +66,11 @@
                  FontSize="18"/>
 
         <!-- Логин -->
+        <Label Content="Логин" 
+               Grid.Row="4"
+               Grid.Column="0"
+               HorizontalAlignment="Right"
+               FontSize="20"/>
 
         <TextBox x:Name="LoginTextBox"
                  Grid.Row="4"
@@ -72,6 +82,11 @@
                  FontSize="18"/>
 
         <!-- Пароль -->
+        <Label Content="Пароль" 
+               Grid.Row="5"
+               Grid.Column="0"
+               HorizontalAlignment="Right"
+               FontSize="20"/>
 
         <PasswordBox x:Name="PasswordBox"
                      Grid.Row="5"
@@ -99,54 +114,13 @@
                      Width="200" 
                      FontSize="18"/>
 
-        <Viewbox Grid.Row="3" Grid.RowSpan="2" Margin="-2,36,14,17">
-            <TextBlock Cursor="Hand">
-<Hyperlink NavigateUri="https://102cars.ru/catalog/jetour/dashing/?utm_source=yandex_aw&amp;utm_medium=cpc&amp;utm_campaign=%D0%9C%D1%83%D0%BB%D1%8C%D1%82%D0%B8%D0%B1%D1%80%D0%B5%D0%BD%D0%B4_%D0%A3%D1%84%D0%B0_%D0%A1%D0%B5%D1%82%D0%B8_%D0%A2%D0%9E_%D0%9E%D0%B1%D1%89%D0%B0%D1%8F_%D0%A1%D0%B0%D0%B9%D1%822&amp;utm_content=cid%7C705330760%7Cgid%7C5684087659%7Caid%7C1894886417556833132%7Cadp%7Cno%7Cdvc%7Cdesktop%7Cpid%7C205684087659%7Crid%7C205684087659%7Cdid%7C205684087659%7Cpos%7Cnone0%7Cadn%7Ccontext%7Ccrid%7C0%7Cpms%7Cyandex.ru%7Cpmb%7Cnone%7Cpmp%7C0&amp;utm_term=---autotargeting&amp;yclid=17305467058008621055&amp;ybaip=1"
-         RequestNavigate="Hyperlink_RequestNavigate"
-         TextDecorations="None">
-    <Image Source="/Resources/car.jpg" Stretch="Uniform"/>
-</Hyperlink>
-            </TextBlock>
-        </Viewbox>
-
-        <Viewbox Grid.Row="4" Grid.RowSpan="3" Grid.Column="0" Margin="-2,36,14,17">
-            <TextBlock Cursor="Hand">
-<Hyperlink NavigateUri="https://alabuga.ru/ru/"
-         RequestNavigate="Hyperlink_RequestNavigate"
-         TextDecorations="None">
-    <Image Source="/Resources/alabuga.jpg" Stretch="Uniform" Height="213" Width="306"/>
-</Hyperlink>
-            </TextBlock>
-        </Viewbox>
-
-        <Viewbox Grid.Row="4" Grid.RowSpan="2" Grid.Column="1" Margin="25,37,14,17">
-            <TextBlock Cursor="Hand">
-<Hyperlink NavigateUri="https://xn--80aneakq8a4c.xn--p1ai/v2/?utm_source=yandex&amp;utm_medium=rsya&amp;utm_campaign=702705620&amp;utm_group=5668186984&amp;utm_content=17364103546&amp;utm_term=---autotargeting&amp;yclid=7313440274434752511&amp;ybaip=1"
-           RequestNavigate="Hyperlink_RequestNavigate"
-           TextDecorations="None">
-    <Image Source="/Resources/dance.jpg" Stretch="Uniform" Height="148" Width="294"/>
-</Hyperlink>
-            </TextBlock>
-        </Viewbox>
-        <Viewbox Grid.Row="0" Grid.RowSpan="1" Grid.Column="1" Margin="25,0,0,0">
-            <TextBlock Cursor="Hand">
-<Hyperlink NavigateUri="https://ufa.uaz-luidor.ru/"
-           RequestNavigate="Hyperlink_RequestNavigate"
-           TextDecorations="None">
-    <Image Source="/Resources/uas.jpg" Stretch="Uniform"/>
-</Hyperlink>
-            </TextBlock>
-        </Viewbox>
-
-        <Viewbox Grid.Row="0" Grid.RowSpan="2" Grid.Column="0" Margin="0">
-            <TextBlock Cursor="Hand">
-<Hyperlink NavigateUri="https://xn--80aneakq8a4c.xn--p1ai/v2/?utm_source=yandex&amp;utm_medium=rsya&amp;utm_campaign=702705620&amp;utm_group=5668186984&amp;utm_content=17364103546&amp;utm_term=---autotargeting&amp;yclid=7313440274434752511&amp;ybaip=1"
-           RequestNavigate="Hyperlink_RequestNavigate"
-           TextDecorations="None">
-    <Image Source="/Resources/svo.jpg" Stretch="Uniform" Height="243" Width="382"/>
-</Hyperlink>
-            </TextBlock>
-        </Viewbox>
+        <Image Grid.Row="7"
+                   Grid.ColumnSpan="2"
+                   Source="/Resources/car.jpg"
+                   Stretch="Uniform"
+                   Height="150"
+                   Margin="0,20,0,0"
+                   HorizontalAlignment="Center"/>
 
         <!-- Кнопки -->
         <StackPanel Grid.Row="8"
@@ -172,36 +146,5 @@
                     FontFamily="Candara"
                     Click="CancelButton_Click"/>
         </StackPanel>
-        <TextBlock Text="Регистрация"
-                   Grid.ColumnSpan="2"
-                   FontSize="35"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"/>
-        <Label Content="Пароль" 
-               Grid.Row="5"
-               Grid.Column="0"
-               HorizontalAlignment="Right"
-               FontSize="20"/>
-        <Label Content="Логин" 
-               Grid.Row="4"
-               Grid.Column="0"
-               HorizontalAlignment="Right"
-               FontSize="20"/>
-        <Viewbox Grid.Row="2" Grid.RowSpan="2" Grid.Column="0" Margin="0">
-            <TextBlock Cursor="Hand"><Hyperlink NavigateUri="https://xn--80aneakq8a4c.xn--p1ai/v2/?utm_source=yandex&amp;utm_medium=rsya&amp;utm_campaign=702705620&amp;utm_group=5668186984&amp;utm_content=17364103546&amp;utm_term=---autotargeting&amp;yclid=7313440274434752511&amp;ybaip=1"
-           RequestNavigate="Hyperlink_RequestNavigate"
-           TextDecorations="None"><InlineUIContainer>
-        <Image Source="/Resources/svoReal.jpg" Stretch="Uniform" Height="45" Width="110" RenderTransformOrigin="0.5,0.5">
-            <Image.RenderTransform>
-                <TransformGroup>
-                    <ScaleTransform ScaleY="1"/>
-                    <SkewTransform/>
-                    <RotateTransform/>
-                    <TranslateTransform/>
-                </TransformGroup>
-            </Image.RenderTransform>
-        </Image>
-    </InlineUIContainer></Hyperlink></TextBlock>
-        </Viewbox>
     </Grid>
 </Window>

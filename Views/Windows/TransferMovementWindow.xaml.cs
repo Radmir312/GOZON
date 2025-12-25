@@ -279,7 +279,7 @@ namespace GOZON.Views.Main.Windows
                         DialogResult = true;
                         Close();
                     }
-                    catch (Exception ex)
+                    catch (Exception)
                     {
                         transaction.Rollback();
                         throw;

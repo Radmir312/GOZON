@@ -268,28 +268,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Resources\pudge.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\svo.jpg" />
-  </ItemGroup>
-  <ItemGroup>
     <Resource Include="Resources\car.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\dance.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\svoReal.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\alabuga.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\dcp.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Resources\uas.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
