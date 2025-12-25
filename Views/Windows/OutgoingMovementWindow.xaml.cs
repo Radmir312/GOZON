@@ -15,7 +15,6 @@ namespace GOZON.Views.Main.Windows
         private int selectedWarehouseId;
         private int quantity;
         private string reason;
-        private Dictionary<int, Dictionary<int, int>> warehouseStock = new Dictionary<int, Dictionary<int, int>>();
 
         public OutgoingMovementWindow()
         {
@@ -43,23 +42,6 @@ namespace GOZON.Views.Main.Windows
                                 Name = reader.GetString(1),
                                 SKU = reader.IsDBNull(2) ? "" : reader.GetString(2)
                             });
-                        }
-                    }
-
-                    // Загружаем текущие остатки по складам
-                    cmd.CommandText = "SELECT ProductId, WarehouseId, Quantity FROM Stock";
-                    using (var reader = cmd.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            int productId = reader.GetInt32(0);
-                            int warehouseId = reader.GetInt32(1);
-                            int stock = reader.GetInt32(2);
-
-                            if (!warehouseStock.ContainsKey(productId))
-                                warehouseStock[productId] = new Dictionary<int, int>();
-
-                            warehouseStock[productId][warehouseId] = stock;
                         }
                     }
 
@@ -114,22 +96,44 @@ namespace GOZON.Views.Main.Windows
                 selectedProductId = selectedProduct.Id;
                 selectedWarehouseId = selectedWarehouse.Id;
 
-                int stock = 0;
-                if (warehouseStock.ContainsKey(selectedProductId) &&
-                    warehouseStock[selectedProductId].ContainsKey(selectedWarehouseId))
+                // Берем актуальные данные из БД
+                try
                 {
-                    stock = warehouseStock[selectedProductId][selectedWarehouseId];
+                    using (var conn = Database.Open())
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = @"
+                            SELECT Quantity FROM Stock 
+                            WHERE ProductId = @productId AND WarehouseId = @warehouseId";
+
+                        cmd.Parameters.AddWithValue("@productId", selectedProductId);
+                        cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
+
+                        var result = cmd.ExecuteScalar();
+                        int stock = (result != null && result != DBNull.Value) ? Convert.ToInt32(result) : 0;
+
+                        Dispatcher.Invoke(() =>
+                        {
+                            CurrentStockTextBlock.Text = stock.ToString();
+
+                            // Меняем цвет если мало товара
+                            if (stock < 10)
+                                CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Red;
+                            else if (stock < 50)
+                                CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Orange;
+                            else
+                                CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Green;
+                        });
+                    }
                 }
-
-                CurrentStockTextBlock.Text = stock.ToString();
-
-                // Меняем цвет если мало товара
-                if (stock < 10)
-                    CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Red;
-                else if (stock < 50)
-                    CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Orange;
-                else
-                    CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Green;
+                catch (Exception ex)
+                {
+                    Dispatcher.Invoke(() =>
+                    {
+                        CurrentStockTextBlock.Text = "Ошибка";
+                        CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Red;
+                    });
+                }
             }
         }
 
@@ -170,93 +174,109 @@ namespace GOZON.Views.Main.Windows
             selectedWarehouseId = ((Warehouse)WarehouseComboBox.SelectedItem).Id;
             reason = ReasonTextBox.Text;
 
-            // Проверка наличия достаточного количества товара
-            int availableStock = 0;
-            if (warehouseStock.ContainsKey(selectedProductId) &&
-                warehouseStock[selectedProductId].ContainsKey(selectedWarehouseId))
-            {
-                availableStock = warehouseStock[selectedProductId][selectedWarehouseId];
-            }
-
-            if (quantity > availableStock)
-            {
-                MessageBox.Show($"Недостаточно товара на складе. Доступно: {availableStock}",
-                    "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                QuantityTextBox.Focus();
-                return;
-            }
-
             try
             {
                 using (var conn = Database.Open())
-                using (var transaction = conn.BeginTransaction())
                 {
-                    try
+                    // 1. Проверяем текущий остаток НАПРЯМУЮ из базы данных
+                    int availableStock = 0;
+                    using (var cmd = conn.CreateCommand())
                     {
-                        int userId = 1; // Заглушка - нужно будет заменить на реального пользователя
+                        cmd.CommandText = @"
+                            SELECT Quantity FROM Stock 
+                            WHERE ProductId = @productId AND WarehouseId = @warehouseId";
 
-                        // 1. Добавляем движение товара (отгрузка)
-                        using (var cmd = conn.CreateCommand())
+                        cmd.Parameters.AddWithValue("@productId", selectedProductId);
+                        cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
+
+                        var result = cmd.ExecuteScalar();
+                        if (result != null && result != DBNull.Value)
                         {
-                            cmd.CommandText = @"
-                                INSERT INTO Movements 
-                                (ProductId, FromWarehouseId, Quantity, MovementType, UserId)
-                                VALUES (@productId, @warehouseId, @quantity, 'OUT', @userId);
-                                SELECT last_insert_rowid();";
+                            availableStock = Convert.ToInt32(result);
+                        }
+                    }
 
-                            cmd.Parameters.AddWithValue("@productId", selectedProductId);
-                            cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
-                            cmd.Parameters.AddWithValue("@quantity", quantity);
-                            cmd.Parameters.AddWithValue("@userId", userId);
+                    if (quantity > availableStock)
+                    {
+                        MessageBox.Show($"Недостаточно товара на складе. Доступно: {availableStock}",
+                            "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        QuantityTextBox.Focus();
+                        return;
+                    }
 
-                            int movementId = Convert.ToInt32(cmd.ExecuteScalar());
+                    // 2. Начинаем транзакцию
+                    using (var transaction = conn.BeginTransaction())
+                    {
+                        try
+                        {
+                            int userId = 1; // Заглушка - нужно будет заменить на реального пользователя
 
-                            // Добавляем причину в историю если указана
-                            if (!string.IsNullOrWhiteSpace(reason))
+                            // 3. Добавляем движение товара (отгрузка)
+                            using (var cmd = conn.CreateCommand())
                             {
                                 cmd.CommandText = @"
-                                    INSERT INTO History 
-                                    (Entity, EntityId, Action, NewValue, UserId)
-                                    VALUES ('Movement', @movementId, 'OUTGOING', @reason, @userId)";
+                                    INSERT INTO Movements 
+                                    (ProductId, FromWarehouseId, Quantity, MovementType, UserId)
+                                    VALUES (@productId, @warehouseId, @quantity, 'OUT', @userId);
+                                    SELECT last_insert_rowid();";
 
-                                cmd.Parameters.Clear();
-                                cmd.Parameters.AddWithValue("@movementId", movementId);
-                                cmd.Parameters.AddWithValue("@reason", $"Причина: {reason}");
+                                cmd.Parameters.AddWithValue("@productId", selectedProductId);
+                                cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
+                                cmd.Parameters.AddWithValue("@quantity", quantity);
                                 cmd.Parameters.AddWithValue("@userId", userId);
-                                cmd.ExecuteNonQuery();
+
+                                int movementId = Convert.ToInt32(cmd.ExecuteScalar());
+
+                                // Добавляем причину в историю если указана
+                                if (!string.IsNullOrWhiteSpace(reason))
+                                {
+                                    cmd.CommandText = @"
+                                        INSERT INTO History 
+                                        (Entity, EntityId, Action, NewValue, UserId)
+                                        VALUES ('Movement', @movementId, 'OUTGOING', @reason, @userId)";
+
+                                    cmd.Parameters.Clear();
+                                    cmd.Parameters.AddWithValue("@movementId", movementId);
+                                    cmd.Parameters.AddWithValue("@reason", $"Причина: {reason}");
+                                    cmd.Parameters.AddWithValue("@userId", userId);
+                                    cmd.ExecuteNonQuery();
+                                }
                             }
-                        }
 
-                        // 2. Уменьшаем остатки на складе
-                        using (var cmd = conn.CreateCommand())
-                        {
-                            cmd.CommandText = @"
-                                UPDATE Stock 
-                                SET Quantity = Quantity - @quantity
-                                WHERE ProductId = @productId AND WarehouseId = @warehouseId";
-
-                            cmd.Parameters.AddWithValue("@productId", selectedProductId);
-                            cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
-                            cmd.Parameters.AddWithValue("@quantity", quantity);
-
-                            int rowsAffected = cmd.ExecuteNonQuery();
-
-                            if (rowsAffected == 0)
+                            // 4. Уменьшаем остатки на складе
+                            using (var cmd = conn.CreateCommand())
                             {
-                                // Если записи не было, создаем с отрицательным количеством?
-                                // Или просто сообщаем об ошибке
-                                throw new Exception("Не удалось обновить остатки товара.");
-                            }
-                        }
+                                cmd.CommandText = @"
+                                    UPDATE Stock 
+                                    SET Quantity = Quantity - @quantity
+                                    WHERE ProductId = @productId AND WarehouseId = @warehouseId";
 
-                        transaction.Commit();
-                        DialogResult = true;
-                        Close();
-                    }
-                    catch (Exception ex)
-                    {
-                        transaction.Rollback();
-                        throw;
+                                cmd.Parameters.AddWithValue("@productId", selectedProductId);
+                                cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
+                                cmd.Parameters.AddWithValue("@quantity", quantity);
+
+                                int rowsAffected = cmd.ExecuteNonQuery();
+
+                                if (rowsAffected == 0)
+                                {
+                                    // Если записи нет, создаем с отрицательным количеством
+                                    cmd.CommandText = @"
+                                        INSERT INTO Stock (ProductId, WarehouseId, Quantity)
+                                        VALUES (@productId, @warehouseId, -@quantity)";
+
+                                    cmd.ExecuteNonQuery();
+                                }
+                            }
+
+                            transaction.Commit();
+                            DialogResult = true;
+                            Close();
+                        }
+                        catch (Exception ex)
+                        {
+                            transaction.Rollback();
+                            throw;
+                        }
                     }
                 }
             }

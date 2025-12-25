@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Navigation;
 
 namespace GOZON
 {
@@ -15,6 +17,24 @@ namespace GOZON
             InitializeComponent();
             // Устанавливаем фокус на первое поле при открытии окна
             Loaded += (s, e) => FullNameTextBox.Focus();
+        }
+
+        private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
+        {
+            try
+            {
+                Process.Start(new ProcessStartInfo
+                {
+                    FileName = e.Uri.AbsoluteUri,
+                    UseShellExecute = true
+                });
+                e.Handled = true;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Не удалось открыть ссылку: {ex.Message}", "Ошибка",
+                    MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)

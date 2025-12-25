@@ -21,13 +21,6 @@
             <ColumnDefinition/>
         </Grid.ColumnDefinitions>
 
-        <TextBlock Text="Авторизация"
-                   Grid.ColumnSpan="2"
-                   FontSize="35"
-                   VerticalAlignment="Center"
-                   HorizontalAlignment="Center"
-                   />
-
         <Label Content="Логин" 
                Grid.Row="2"
                Grid.Column="0"
@@ -75,6 +68,7 @@
                 
                 Click="LoginButton_Click" 
                 />
+        
 
         <TextBlock Width="200" Height="30"
                    Grid.Row="4" 
@@ -89,6 +83,12 @@
                            Нет аккаунта? Зарегистрируйтесь
                 </Hyperlink>
         </TextBlock>
+        <TextBlock Text="Авторизация"
+                   Grid.ColumnSpan="2"
+                   FontSize="35"
+                   VerticalAlignment="Center"
+                   HorizontalAlignment="Center"
+                   />
 
     </Grid>
 </Window>

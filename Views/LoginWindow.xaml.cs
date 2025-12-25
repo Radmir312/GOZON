@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Data.SQLite;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media.Imaging;
+using System.Windows.Navigation;
 
 namespace GOZON.Views
 {
@@ -11,6 +14,7 @@ namespace GOZON.Views
         {
             InitializeComponent();
         }
+
 
         private void LoginButton_Click(object sender, RoutedEventArgs e)
         {
@@ -62,5 +66,14 @@ namespace GOZON.Views
         
         }
 
+        private void Image_LayoutUpdated(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Hyperlink_RequestNavigate_1(object sender, RequestNavigateEventArgs e)
+        {
+
+        }
     }
 }
