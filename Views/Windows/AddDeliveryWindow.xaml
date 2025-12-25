@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Добавить поставку" 
-        Height="350" 
+        Height="429" 
         Width="400"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
@@ -37,7 +37,7 @@
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
@@ -69,14 +69,14 @@
         <ComboBox Grid.Row="7" 
                   x:Name="WarehouseComboBox"
                   DisplayMemberPath="Name"
-                  SelectedValuePath="Id"/>
+                  SelectedValuePath="Id" Margin="5,5,5,68"/>
 
         <!-- Количество -->
-        <TextBlock Grid.Row="8" Text="Количество:*"/>
-        <TextBox Grid.Row="9" 
+        <TextBlock Grid.Row="7" Text="Количество:*" Margin="5,72,10,0" VerticalAlignment="Top"/>
+        <TextBox Grid.Row="7" 
                  x:Name="QuantityTextBox"
                  Text="1"
-                 PreviewTextInput="QuantityTextBox_PreviewTextInput"/>
+                 PreviewTextInput="QuantityTextBox_PreviewTextInput" Margin="5,93,5,4"/>
 
         <!-- Кнопки -->
         <StackPanel Grid.Row="10" 

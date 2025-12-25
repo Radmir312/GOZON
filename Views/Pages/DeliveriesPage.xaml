@@ -16,9 +16,16 @@
                     Click="AddDelivery_Click" 
                     Width="120" 
                     Margin="0,0,5,0"/>
+
+            <Button Content="Удалить поставку" 
+                    Click="DeleteDelivery_Click" 
+                    Width="120" 
+                    Margin="0,0,5,0"/>
+
             <Button Content="Обновить" 
                     Click="Refresh_Click" 
-                    Width="80"/>
+                    Width="80"
+                    Margin="0,0,5,0"/>
         </StackPanel>
 
         <DataGrid x:Name="DeliveriesGrid"

@@ -169,10 +169,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\Pages\HistoryPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Views\Windows\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -187,9 +183,6 @@
     <Compile Include="Views\Pages\DeliveriesPage.xaml.cs">
       <DependentUpon>DeliveriesPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\HistoryPage.xaml.cs">
-      <DependentUpon>HistoryPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Windows\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -203,10 +196,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\Pages\ReportsPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Views\Pages\SettingsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -234,9 +223,6 @@
     <Compile Include="Views\Pages\ReportsPage.xaml.cs">
       <DependentUpon>ReportsPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\Pages\SettingsPage.xaml.cs">
-      <DependentUpon>SettingsPage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Views\Pages\SuppliersPage.xaml.cs">
       <DependentUpon>SuppliersPage.xaml</DependentUpon>
     </Compile>
@@ -251,11 +237,9 @@
     </Compile>
     <Compile Include="Manager.cs" />
     <Compile Include="Models\Delivery.cs" />
-    <Compile Include="Models\History.cs" />
     <Compile Include="Models\Movement.cs" />
     <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Report.cs" />
-    <Compile Include="Models\Settings.cs" />
     <Compile Include="Models\StockItem.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Models\Suppliers.cs" />
@@ -274,7 +258,6 @@
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Database\Запросы.MD" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

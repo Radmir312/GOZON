@@ -22,14 +22,14 @@ namespace GOZON.Views.Main.Windows
 
         private void LoadFilters()
         {
-            // Загрузка фильтров типа движения
+
             TypeFilter.Items.Add("Все");
             TypeFilter.Items.Add("Приход (IN)");
             TypeFilter.Items.Add("Отгрузка (OUT)");
             TypeFilter.Items.Add("Перемещение (MOVE)");
             TypeFilter.SelectedIndex = 0;
 
-            // Загрузка складов для фильтра
+
             WarehouseFilter.Items.Add("Все склады");
             using (var conn = Database.Open())
             using (var cmd = conn.CreateCommand())
@@ -45,7 +45,7 @@ namespace GOZON.Views.Main.Windows
             }
             WarehouseFilter.SelectedIndex = 0;
 
-            // Установка дат по умолчанию
+
             DateFromPicker.SelectedDate = DateTime.Now.AddDays(-30);
             DateToPicker.SelectedDate = DateTime.Now;
         }
@@ -129,7 +129,7 @@ namespace GOZON.Views.Main.Windows
                                 CreatedAt = reader.GetDateTime(8)
                             };
 
-                            // Устанавливаем отображаемое название типа
+
                             switch (movement.MovementType)
                             {
                                 case "IN":
@@ -185,11 +185,11 @@ namespace GOZON.Views.Main.Windows
 
         private void CreateIncoming_Click(object sender, RoutedEventArgs e)
         {
-            // Используем существующее окно AddDeliveryWindow для прихода товара
+
             var window = new AddDeliveryWindow();
             if (window.ShowDialog() == true)
             {
-                MessageBox.Show("Приход товара успешно оформлен", "Успех",
+                MessageBox.Show("Приход товара успешно оформлен",
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadMovements();
             }
@@ -197,11 +197,11 @@ namespace GOZON.Views.Main.Windows
 
         private void CreateOutgoing_Click(object sender, RoutedEventArgs e)
         {
-            // Создаем окно для отгрузки товара
+
             var window = new OutgoingMovementWindow();
             if (window.ShowDialog() == true)
             {
-                MessageBox.Show("Отгрузка товара успешно оформлена", "Успех",
+                MessageBox.Show("Отгрузка товара успешно оформлена",
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadMovements();
             }
@@ -209,11 +209,11 @@ namespace GOZON.Views.Main.Windows
 
         private void CreateTransfer_Click(object sender, RoutedEventArgs e)
         {
-            // Создаем окно для перемещения товара
+
             var window = new TransferMovementWindow();
             if (window.ShowDialog() == true)
             {
-                MessageBox.Show("Перемещение товара успешно оформлено", "Успех",
+                MessageBox.Show("Перемещение товара успешно оформлено",
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadMovements();
             }

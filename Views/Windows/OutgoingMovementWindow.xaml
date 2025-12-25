@@ -71,6 +71,14 @@
                    FontWeight="Bold"
                    Margin="5,0,5,0" Grid.ColumnSpan="2"/>
 
+        <!-- Текущий остаток -->
+        <TextBlock Grid.Row="4" Text="Текущий остаток на складе:"/>
+        <TextBlock Grid.Row="5" 
+                   x:Name="CurrentStockTextBlock" 
+                   Text="0"
+                   FontWeight="Bold"
+                   Margin="5"/>
+
         <!-- Количество -->
         <TextBlock Grid.Row="6" Text="Количество:*" Grid.ColumnSpan="2" Margin="10,0,5,0"/>
         <Grid Grid.Row="7" Grid.ColumnSpan="2" Margin="0,0,0,26" Grid.RowSpan="2">

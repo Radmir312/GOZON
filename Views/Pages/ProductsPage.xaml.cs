@@ -117,7 +117,6 @@ namespace GOZON.Views.Pages
                         using (var conn = Database.Open())
                         using (var cmd = conn.CreateCommand())
                         {
-                            // Сначала проверяем, есть ли остатки
                             cmd.CommandText = "SELECT COUNT(*) FROM Stock WHERE ProductId = @id";
                             cmd.Parameters.AddWithValue("@id", selectedProduct.Id);
                             var stockCount = Convert.ToInt32(cmd.ExecuteScalar());
@@ -129,7 +128,6 @@ namespace GOZON.Views.Pages
                                 return;
                             }
 
-                            // Проверяем, есть ли движения товара
                             cmd.CommandText = "SELECT COUNT(*) FROM Movements WHERE ProductId = @id";
                             var movementsCount = Convert.ToInt32(cmd.ExecuteScalar());
 
@@ -140,7 +138,6 @@ namespace GOZON.Views.Pages
                                 return;
                             }
 
-                            // Удаляем товар
                             cmd.CommandText = "DELETE FROM Products WHERE Id = @id";
                             cmd.ExecuteNonQuery();
 

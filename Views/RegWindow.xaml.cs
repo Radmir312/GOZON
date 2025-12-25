@@ -15,7 +15,7 @@ namespace GOZON
         public RegWindow()
         {
             InitializeComponent();
-            // Устанавливаем фокус на первое поле при открытии окна
+
             Loaded += (s, e) => FullNameTextBox.Focus();
         }
 
@@ -39,22 +39,22 @@ namespace GOZON
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-            // Собираем данные из полей
+
             string fullName = FullNameTextBox.Text.Trim();
             string email = EmailTextBox.Text.Trim();
             string login = LoginTextBox.Text.Trim();
             string password = PasswordBox.Password;
             string confirmPassword = ConfirmPasswordBox.Password;
 
-            // Валидация обязательных полей
+
             if (!ValidateRequiredFields(fullName, login, password, confirmPassword))
                 return;
 
-            // Валидация формата данных
+
             if (!ValidateDataFormat(fullName, login, password))
                 return;
 
-            // Валидация email (если указан)
+
             if (!string.IsNullOrWhiteSpace(email))
             {
                 if (!IsValidEmail(email))
@@ -73,7 +73,7 @@ namespace GOZON
             using (var conn = Database.Open())
             using (var cmd = conn.CreateCommand())
             {
-                // проверка уникальности логина
+
                 cmd.CommandText = "SELECT COUNT(*) FROM Users WHERE Login = @login";
                 cmd.Parameters.AddWithValue("@login", login);
 
@@ -87,7 +87,6 @@ namespace GOZON
                     return;
                 }
 
-                // проверка уникальности email (если указан)
                 if (!string.IsNullOrWhiteSpace(email))
                 {
                     cmd.CommandText = "SELECT COUNT(*) FROM Users WHERE Email = @email";
@@ -105,7 +104,7 @@ namespace GOZON
                     }
                 }
 
-                // регистрация
+
                 cmd.CommandText = @"
                     INSERT INTO Users (Login, PasswordHash, FullName, Email, CreatedAt)
                     VALUES (@login, @passwordHash, @fullName, @email, datetime('now'))
@@ -209,18 +208,18 @@ namespace GOZON
 
             try
             {
-                // Более точная, но не слишком сложная проверка email
+
                 var pattern = @"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
 
-                // Проверяем общую структуру
+
                 if (!Regex.IsMatch(email, pattern))
                     return false;
 
-                // Проверяем длину (максимум 254 символа по стандарту)
+
                 if (email.Length > 254)
                     return false;
 
-                // Проверяем, что есть @ и она не первая и не последняя
+
                 int atIndex = email.IndexOf('@');
                 if (atIndex <= 0 || atIndex == email.Length - 1)
                     return false;
@@ -228,40 +227,40 @@ namespace GOZON
                 string localPart = email.Substring(0, atIndex);
                 string domainPart = email.Substring(atIndex + 1);
 
-                // Проверяем локальную часть
-                if (localPart.Length > 64) // RFC ограничение
+
+                if (localPart.Length > 64)
                     return false;
 
-                // Не может начинаться или заканчиваться точкой
+
                 if (localPart.StartsWith(".") || localPart.EndsWith("."))
                     return false;
 
-                // Не может содержать две точки подряд
+
                 if (localPart.Contains(".."))
                     return false;
 
-                // Проверяем доменную часть
+
                 if (domainPart.Length > 253)
                     return false;
 
-                // Должна содержать точку
+
                 if (!domainPart.Contains("."))
                     return false;
 
-                // Не может начинаться или заканчиваться точкой
+
                 if (domainPart.StartsWith(".") || domainPart.EndsWith("."))
                     return false;
 
-                // Не может содержать две точки подряд
+
                 if (domainPart.Contains(".."))
                     return false;
 
-                // Верхнеуровневый домен должен быть минимум 2 символа
+
                 string tld = domainPart.Substring(domainPart.LastIndexOf('.') + 1);
                 if (tld.Length < 2)
                     return false;
 
-                // Проверяем допустимые символы в домене
+
                 if (!Regex.IsMatch(domainPart, @"^[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$"))
                     return false;
 
@@ -273,7 +272,6 @@ namespace GOZON
             }
         }
 
-        // Дополнительная валидация в реальном времени для email
         private void EmailTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (EmailTextBox.Text.Length > 100)
@@ -282,12 +280,10 @@ namespace GOZON
                 EmailTextBox.CaretIndex = 100;
             }
 
-            // Опционально: можно добавить цветовую индикацию валидности
+
             string email = EmailTextBox.Text.Trim();
             if (!string.IsNullOrEmpty(email))
-            {
-                // Можно менять цвет рамки или фона в зависимости от валидности
-                // Это улучшает UX
+
                 bool isValid = IsValidEmail(email);
                 EmailTextBox.BorderBrush = isValid ?
                     System.Windows.Media.Brushes.Green :
@@ -295,7 +291,7 @@ namespace GOZON
             }
             else
             {
-                // Сброс цвета, если поле пустое
+
                 EmailTextBox.ClearValue(BorderBrushProperty);
             }
         }

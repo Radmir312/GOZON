@@ -29,7 +29,7 @@ namespace GOZON.Views.Main.Windows
                 using (var conn = Database.Open())
                 using (var cmd = conn.CreateCommand())
                 {
-                    // Загружаем товары
+
                     var products = new List<Product>();
                     cmd.CommandText = "SELECT Id, Name, SKU FROM Products ORDER BY Name";
                     using (var reader = cmd.ExecuteReader())
@@ -96,44 +96,24 @@ namespace GOZON.Views.Main.Windows
                 selectedProductId = selectedProduct.Id;
                 selectedWarehouseId = selectedWarehouse.Id;
 
-                // Берем актуальные данные из БД
-                try
+                int stock = 0;
+                if (warehouseStock.ContainsKey(selectedProductId) &&
+                    warehouseStock[selectedProductId].ContainsKey(selectedWarehouseId))
                 {
-                    using (var conn = Database.Open())
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = @"
-                            SELECT Quantity FROM Stock 
-                            WHERE ProductId = @productId AND WarehouseId = @warehouseId";
-
-                        cmd.Parameters.AddWithValue("@productId", selectedProductId);
-                        cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
-
-                        var result = cmd.ExecuteScalar();
-                        int stock = (result != null && result != DBNull.Value) ? Convert.ToInt32(result) : 0;
+                    stock = warehouseStock[selectedProductId][selectedWarehouseId];
+                }
 
                         Dispatcher.Invoke(() =>
                         {
                             CurrentStockTextBlock.Text = stock.ToString();
 
-                            // Меняем цвет если мало товара
-                            if (stock < 10)
-                                CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Red;
-                            else if (stock < 50)
-                                CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Orange;
-                            else
-                                CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Green;
-                        });
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Dispatcher.Invoke(() =>
-                    {
-                        CurrentStockTextBlock.Text = "Ошибка";
-                        CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Red;
-                    });
-                }
+                // Меняем цвет если мало товара
+                if (stock < 10)
+                    CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Red;
+                else if (stock < 50)
+                    CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Orange;
+                else
+                    CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Green;
             }
         }
 
@@ -145,7 +125,7 @@ namespace GOZON.Views.Main.Windows
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Валидация
+
             if (ProductComboBox.SelectedItem == null)
             {
                 MessageBox.Show("Выберите товар", "Ошибка",
@@ -174,27 +154,13 @@ namespace GOZON.Views.Main.Windows
             selectedWarehouseId = ((Warehouse)WarehouseComboBox.SelectedItem).Id;
             reason = ReasonTextBox.Text;
 
-            try
+            // Проверка наличия достаточного количества товара
+            int availableStock = 0;
+            if (warehouseStock.ContainsKey(selectedProductId) &&
+                warehouseStock[selectedProductId].ContainsKey(selectedWarehouseId))
             {
-                using (var conn = Database.Open())
-                {
-                    // 1. Проверяем текущий остаток НАПРЯМУЮ из базы данных
-                    int availableStock = 0;
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandText = @"
-                            SELECT Quantity FROM Stock 
-                            WHERE ProductId = @productId AND WarehouseId = @warehouseId";
-
-                        cmd.Parameters.AddWithValue("@productId", selectedProductId);
-                        cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
-
-                        var result = cmd.ExecuteScalar();
-                        if (result != null && result != DBNull.Value)
-                        {
-                            availableStock = Convert.ToInt32(result);
-                        }
-                    }
+                availableStock = warehouseStock[selectedProductId][selectedWarehouseId];
+            }
 
                     if (quantity > availableStock)
                     {
@@ -204,21 +170,23 @@ namespace GOZON.Views.Main.Windows
                         return;
                     }
 
-                    // 2. Начинаем транзакцию
-                    using (var transaction = conn.BeginTransaction())
+            try
+            {
+                using (var conn = Database.Open())
+                using (var transaction = conn.BeginTransaction())
+                {
+                    try
                     {
-                        try
-                        {
-                            int userId = 1; // Заглушка - нужно будет заменить на реального пользователя
+                        int userId = 1; // Заглушка - нужно будет заменить на реального пользователя
 
-                            // 3. Добавляем движение товара (отгрузка)
-                            using (var cmd = conn.CreateCommand())
-                            {
-                                cmd.CommandText = @"
-                                    INSERT INTO Movements 
-                                    (ProductId, FromWarehouseId, Quantity, MovementType, UserId)
-                                    VALUES (@productId, @warehouseId, @quantity, 'OUT', @userId);
-                                    SELECT last_insert_rowid();";
+                        // 1. Добавляем движение товара (отгрузка)
+                        using (var cmd = conn.CreateCommand())
+                        {
+                            cmd.CommandText = @"
+                                INSERT INTO Movements 
+                                (ProductId, FromWarehouseId, Quantity, MovementType, UserId)
+                                VALUES (@productId, @warehouseId, @quantity, 'OUT', @userId);
+                                SELECT last_insert_rowid();";
 
                                 cmd.Parameters.AddWithValue("@productId", selectedProductId);
                                 cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
@@ -227,13 +195,13 @@ namespace GOZON.Views.Main.Windows
 
                                 int movementId = Convert.ToInt32(cmd.ExecuteScalar());
 
-                                // Добавляем причину в историю если указана
-                                if (!string.IsNullOrWhiteSpace(reason))
-                                {
-                                    cmd.CommandText = @"
-                                        INSERT INTO History 
-                                        (Entity, EntityId, Action, NewValue, UserId)
-                                        VALUES ('Movement', @movementId, 'OUTGOING', @reason, @userId)";
+                            // Добавляем причину в историю если указана
+                            if (!string.IsNullOrWhiteSpace(reason))
+                            {
+                                cmd.CommandText = @"
+                                    INSERT INTO History 
+                                    (Entity, EntityId, Action, NewValue, UserId)
+                                    VALUES ('Movement', @movementId, 'OUTGOING', @reason, @userId)";
 
                                     cmd.Parameters.Clear();
                                     cmd.Parameters.AddWithValue("@movementId", movementId);
@@ -243,13 +211,13 @@ namespace GOZON.Views.Main.Windows
                                 }
                             }
 
-                            // 4. Уменьшаем остатки на складе
-                            using (var cmd = conn.CreateCommand())
-                            {
-                                cmd.CommandText = @"
-                                    UPDATE Stock 
-                                    SET Quantity = Quantity - @quantity
-                                    WHERE ProductId = @productId AND WarehouseId = @warehouseId";
+                        // 2. Уменьшаем остатки на складе
+                        using (var cmd = conn.CreateCommand())
+                        {
+                            cmd.CommandText = @"
+                                UPDATE Stock 
+                                SET Quantity = Quantity - @quantity
+                                WHERE ProductId = @productId AND WarehouseId = @warehouseId";
 
                                 cmd.Parameters.AddWithValue("@productId", selectedProductId);
                                 cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
@@ -257,16 +225,13 @@ namespace GOZON.Views.Main.Windows
 
                                 int rowsAffected = cmd.ExecuteNonQuery();
 
-                                if (rowsAffected == 0)
-                                {
-                                    // Если записи нет, создаем с отрицательным количеством
-                                    cmd.CommandText = @"
-                                        INSERT INTO Stock (ProductId, WarehouseId, Quantity)
-                                        VALUES (@productId, @warehouseId, -@quantity)";
-
-                                    cmd.ExecuteNonQuery();
-                                }
+                            if (rowsAffected == 0)
+                            {
+                                // Если записи не было, создаем с отрицательным количеством?
+                                // Или просто сообщаем об ошибке
+                                throw new Exception("Не удалось обновить остатки товара.");
                             }
+                        }
 
                             transaction.Commit();
                             DialogResult = true;

@@ -28,7 +28,7 @@ namespace GOZON.Views.Windows
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Валидация
+
             if (string.IsNullOrWhiteSpace(Product.Name))
             {
                 MessageBox.Show("Введите название товара", "Ошибка",
@@ -60,7 +60,7 @@ namespace GOZON.Views.Windows
                 {
                     if (IsEditMode)
                     {
-                        // Обновление существующего товара
+
                         cmd.CommandText = @"
                             UPDATE Products 
                             SET Name = @name, 
@@ -72,7 +72,7 @@ namespace GOZON.Views.Windows
                     }
                     else
                     {
-                        // Добавление нового товара
+
                         cmd.CommandText = @"
                             INSERT INTO Products (Name, SKU, Price, MinQuantity, Description)
                             VALUES (@name, @sku, @price, @minQuantity, @description);

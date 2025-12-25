@@ -73,7 +73,7 @@ namespace GOZON.Views.Main.Windows
             var window = new AddEditWarehouseWindow();
             if (window.ShowDialog() == true)
             {
-                MessageBox.Show("Склад успешно добавлен", "Успех",
+                MessageBox.Show("Склад успешно добавлен",
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadWarehouses();
             }
@@ -86,7 +86,7 @@ namespace GOZON.Views.Main.Windows
                 var window = new AddEditWarehouseWindow(selectedWarehouse);
                 if (window.ShowDialog() == true)
                 {
-                    MessageBox.Show("Склад успешно обновлен", "Успех",
+                    MessageBox.Show("Склад успешно обновлен",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                     LoadWarehouses();
                 }
@@ -97,7 +97,7 @@ namespace GOZON.Views.Main.Windows
         {
             if (WarehousesGrid.SelectedItem is Warehouse selectedWarehouse)
             {
-                // Проверяем, есть ли товары на складе
+
                 if (selectedWarehouse.TotalStock > 0)
                 {
                     MessageBox.Show("Невозможно удалить склад, так как на нем есть товары. " +
@@ -119,7 +119,7 @@ namespace GOZON.Views.Main.Windows
                         using (var conn = Database.Open())
                         using (var cmd = conn.CreateCommand())
                         {
-                            // Проверяем, есть ли связанные движения товаров
+
                             cmd.CommandText = @"
                                 SELECT COUNT(*) FROM Movements 
                                 WHERE FromWarehouseId = @id OR ToWarehouseId = @id";
@@ -135,7 +135,6 @@ namespace GOZON.Views.Main.Windows
                                 return;
                             }
 
-                            // Удаляем связанные записи в Stock
                             cmd.CommandText = "DELETE FROM Stock WHERE WarehouseId = @id";
                             cmd.ExecuteNonQuery();
 
@@ -143,7 +142,7 @@ namespace GOZON.Views.Main.Windows
                             cmd.CommandText = "DELETE FROM Warehouses WHERE Id = @id";
                             cmd.ExecuteNonQuery();
 
-                            MessageBox.Show("Склад успешно удален", "Успех",
+                            MessageBox.Show("Склад успешно удален",
                                 MessageBoxButton.OK, MessageBoxImage.Information);
                             LoadWarehouses();
                         }

@@ -30,7 +30,7 @@ namespace GOZON.Views.Main.Windows
                 using (var conn = Database.Open())
                 using (var cmd = conn.CreateCommand())
                 {
-                    // Загружаем товары
+
                     var products = new List<Product>();
                     cmd.CommandText = "SELECT Id, Name, SKU FROM Products ORDER BY Name";
                     using (var reader = cmd.ExecuteReader())
@@ -46,7 +46,7 @@ namespace GOZON.Views.Main.Windows
                         }
                     }
 
-                    // Загружаем текущие остатки по складам
+
                     cmd.CommandText = "SELECT ProductId, WarehouseId, Quantity FROM Stock";
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -63,7 +63,7 @@ namespace GOZON.Views.Main.Windows
                         }
                     }
 
-                    // Загружаем склады
+
                     var warehouses = new List<Warehouse>();
                     cmd.CommandText = "SELECT Id, Name FROM Warehouses ORDER BY Name";
                     using (var reader = cmd.ExecuteReader())
@@ -128,7 +128,7 @@ namespace GOZON.Views.Main.Windows
 
                 CurrentStockTextBlock.Text = stock.ToString();
 
-                // Меняем цвет если мало товара
+
                 if (stock < 10)
                     CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Red;
                 else if (stock < 50)
@@ -146,7 +146,7 @@ namespace GOZON.Views.Main.Windows
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Валидация
+
             if (ProductComboBox.SelectedItem == null)
             {
                 MessageBox.Show("Выберите товар", "Ошибка",
@@ -183,7 +183,7 @@ namespace GOZON.Views.Main.Windows
             fromWarehouseId = ((Warehouse)FromWarehouseComboBox.SelectedItem).Id;
             toWarehouseId = ((Warehouse)ToWarehouseComboBox.SelectedItem).Id;
 
-            // Проверяем что склады разные
+
             if (fromWarehouseId == toWarehouseId)
             {
                 MessageBox.Show("Склад-источник и склад-назначение должны быть разными",
@@ -191,7 +191,7 @@ namespace GOZON.Views.Main.Windows
                 return;
             }
 
-            // Проверка наличия достаточного количества товара
+
             int availableStock = 0;
             if (warehouseStock.ContainsKey(selectedProductId) &&
                 warehouseStock[selectedProductId].ContainsKey(fromWarehouseId))
@@ -216,7 +216,7 @@ namespace GOZON.Views.Main.Windows
                     {
                         int userId = 1; // Заглушка - нужно будет заменить на реального пользователя
 
-                        // 1. Добавляем движение товара (перемещение)
+
                         using (var cmd = conn.CreateCommand())
                         {
                             cmd.CommandText = @"
@@ -234,7 +234,7 @@ namespace GOZON.Views.Main.Windows
                             cmd.ExecuteScalar();
                         }
 
-                        // 2. Уменьшаем остатки на складе-источнике
+
                         using (var cmd = conn.CreateCommand())
                         {
                             cmd.CommandText = @"
@@ -250,7 +250,7 @@ namespace GOZON.Views.Main.Windows
 
                             if (rowsAffected == 0)
                             {
-                                // Создаем запись если её не было (но не должно быть такого случая)
+
                                 cmd.CommandText = @"
                                     INSERT INTO Stock (ProductId, WarehouseId, Quantity)
                                     VALUES (@productId, @fromWarehouseId, -@quantity)";
@@ -258,7 +258,7 @@ namespace GOZON.Views.Main.Windows
                             }
                         }
 
-                        // 3. Увеличиваем остатки на складе-назначении
+
                         using (var cmd = conn.CreateCommand())
                         {
                             cmd.CommandText = @"

@@ -75,7 +75,7 @@ namespace GOZON.Views.Main.Windows
             var window = new AddEditSupplierWindow();
             if (window.ShowDialog() == true)
             {
-                MessageBox.Show("Поставщик успешно добавлен", "Успех",
+                MessageBox.Show("Поставщик успешно добавлен",
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadSuppliers();
             }
@@ -88,7 +88,7 @@ namespace GOZON.Views.Main.Windows
                 var window = new AddEditSupplierWindow(selectedSupplier);
                 if (window.ShowDialog() == true)
                 {
-                    MessageBox.Show("Поставщик успешно обновлен", "Успех",
+                    MessageBox.Show("Поставщик успешно обновлен",
                         MessageBoxButton.OK, MessageBoxImage.Information);
                     LoadSuppliers();
                 }
@@ -99,14 +99,14 @@ namespace GOZON.Views.Main.Windows
         {
             if (SuppliersGrid.SelectedItem is Supplier selectedSupplier)
             {
-                // Проверяем, есть ли связанные поставки
+
                 bool hasRelatedData = false;
                 string message = "";
 
                 using (var conn = Database.Open())
                 using (var cmd = conn.CreateCommand())
                 {
-                    // Проверяем, есть ли движения товаров с этим поставщиком
+
                     cmd.CommandText = "SELECT COUNT(*) FROM Movements WHERE SupplierId = @id";
                     cmd.Parameters.AddWithValue("@id", selectedSupplier.Id);
 
@@ -144,7 +144,7 @@ namespace GOZON.Views.Main.Windows
                             cmd.Parameters.AddWithValue("@id", selectedSupplier.Id);
                             cmd.ExecuteNonQuery();
 
-                            MessageBox.Show("Поставщик успешно удален", "Успех",
+                            MessageBox.Show("Поставщик успешно удален",
                                 MessageBoxButton.OK, MessageBoxImage.Information);
                             LoadSuppliers();
                         }

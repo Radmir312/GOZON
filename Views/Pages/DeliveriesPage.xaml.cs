@@ -19,6 +19,56 @@ namespace GOZON.Views.Main.Windows
             LoadDeliveries();
         }
 
+        private void DeleteDelivery_Click(object sender, RoutedEventArgs e)
+        {
+            if (DeliveriesGrid.SelectedItem == null)
+            {
+                MessageBox.Show("Выбери поставку, умник.",
+                    "Нечего удалять",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            var delivery = (Delivery)DeliveriesGrid.SelectedItem;
+
+            var result = MessageBox.Show(
+                $"Удалить поставку ID {delivery.Id}?\nОтмены не будет, жизнь боль.",
+                "Подтверждение удаления",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question);
+
+            if (result != MessageBoxResult.Yes)
+                return;
+
+            try
+            {
+                using (var conn = Database.Open())
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = "DELETE FROM Movements WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", delivery.Id);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+                LoadDeliveries();
+
+                MessageBox.Show("Поставка удалена.",
+                    "Готово",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Не удалось удалить поставку:\n" + ex.Message,
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+            }
+        }
+
+
         private void LoadDeliveries()
         {
             try
@@ -78,7 +128,7 @@ namespace GOZON.Views.Main.Windows
             var window = new AddDeliveryWindow();
             if (window.ShowDialog() == true)
             {
-                MessageBox.Show("Поставка успешно добавлена", "Успех",
+                MessageBox.Show("Поставка успешно добавлена",
                     MessageBoxButton.OK, MessageBoxImage.Information);
                 LoadDeliveries();
             }

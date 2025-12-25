@@ -30,7 +30,7 @@ namespace GOZON.Views.Main.Windows
                 using (var conn = Database.Open())
                 using (var cmd = conn.CreateCommand())
                 {
-                    // Загружаем товары
+
                     var products = new List<Product>();
                     cmd.CommandText = "SELECT Id, Name, SKU FROM Products ORDER BY Name";
                     using (var reader = cmd.ExecuteReader())
@@ -46,7 +46,7 @@ namespace GOZON.Views.Main.Windows
                         }
                     }
 
-                    // Загружаем текущие остатки
+
                     cmd.CommandText = "SELECT ProductId, SUM(Quantity) FROM Stock GROUP BY ProductId";
                     using (var reader = cmd.ExecuteReader())
                     {
@@ -56,7 +56,7 @@ namespace GOZON.Views.Main.Windows
                         }
                     }
 
-                    // Загружаем поставщиков
+
                     var suppliers = new List<Supplier>();
                     cmd.CommandText = "SELECT Id, Name FROM Suppliers ORDER BY Name";
                     using (var reader = cmd.ExecuteReader())
@@ -71,7 +71,6 @@ namespace GOZON.Views.Main.Windows
                         }
                     }
 
-                    // Загружаем склады
                     var warehouses = new List<Warehouse>();
                     cmd.CommandText = "SELECT Id, Name FROM Warehouses ORDER BY Name";
                     using (var reader = cmd.ExecuteReader())
@@ -86,7 +85,7 @@ namespace GOZON.Views.Main.Windows
                         }
                     }
 
-                    // Устанавливаем источники данных
+
                     Dispatcher.Invoke(() =>
                     {
                         ProductComboBox.ItemsSource = products;
@@ -113,7 +112,6 @@ namespace GOZON.Views.Main.Windows
             {
                 selectedProductId = selectedProduct.Id;
 
-                // Показываем текущий остаток
                 if (productStock.TryGetValue(selectedProduct.Id, out int stock))
                 {
                     CurrentStockTextBlock.Text = stock.ToString();
@@ -127,14 +125,14 @@ namespace GOZON.Views.Main.Windows
 
         private void QuantityTextBox_PreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            // Разрешаем только цифры
+
             Regex regex = new Regex("[^0-9]+");
             e.Handled = regex.IsMatch(e.Text);
         }
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Валидация
+
             if (ProductComboBox.SelectedItem == null)
             {
                 MessageBox.Show("Выберите товар", "Ошибка",
@@ -167,7 +165,6 @@ namespace GOZON.Views.Main.Windows
                 return;
             }
 
-            // Получаем ID из выбранных элементов
             selectedProductId = ((Product)ProductComboBox.SelectedItem).Id;
             selectedSupplierId = ((Supplier)SupplierComboBox.SelectedItem).Id;
             selectedWarehouseId = ((Warehouse)WarehouseComboBox.SelectedItem).Id;
@@ -179,10 +176,9 @@ namespace GOZON.Views.Main.Windows
                 {
                     try
                     {
-                        int userId = 1; // Заглушка - нужно будет заменить на реального пользователя
+                        int userId = 1; 
                         int deliveryId = 0;
 
-                        // 1. Добавляем движение товара
                         using (var cmd = conn.CreateCommand())
                         {
                             cmd.CommandText = @"
@@ -200,7 +196,6 @@ namespace GOZON.Views.Main.Windows
                             deliveryId = Convert.ToInt32(cmd.ExecuteScalar());
                         }
 
-                        // 2. Обновляем остатки на складе
                         using (var cmd = conn.CreateCommand())
                         {
                             cmd.CommandText = @"

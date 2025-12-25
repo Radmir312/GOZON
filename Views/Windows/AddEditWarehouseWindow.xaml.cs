@@ -27,7 +27,7 @@ namespace GOZON.Views.Main.Windows
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Валидация
+
             if (string.IsNullOrWhiteSpace(Warehouse.Name))
             {
                 MessageBox.Show("Введите название склада", "Ошибка",
@@ -59,7 +59,7 @@ namespace GOZON.Views.Main.Windows
                 {
                     if (IsEditMode)
                     {
-                        // Обновление существующего склада
+
                         cmd.CommandText = @"
                             UPDATE Warehouses 
                             SET Name = @name, 
@@ -68,7 +68,7 @@ namespace GOZON.Views.Main.Windows
                     }
                     else
                     {
-                        // Добавление нового склада
+
                         cmd.CommandText = @"
                             INSERT INTO Warehouses (Name, Location)
                             VALUES (@name, @location);

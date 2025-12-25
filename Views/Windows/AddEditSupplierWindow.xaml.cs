@@ -30,7 +30,7 @@ namespace GOZON.Views.Main.Windows
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-            // Валидация
+
             if (string.IsNullOrWhiteSpace(Supplier.Name))
             {
                 MessageBox.Show("Введите название компании", "Ошибка",
@@ -47,7 +47,6 @@ namespace GOZON.Views.Main.Windows
                 return;
             }
 
-            // Проверка email, если указан
             if (!string.IsNullOrWhiteSpace(Supplier.Email))
             {
                 try
@@ -63,10 +62,10 @@ namespace GOZON.Views.Main.Windows
                 }
             }
 
-            // Проверка телефона, если указан
+
             if (!string.IsNullOrWhiteSpace(Supplier.Phone))
             {
-                // Простая проверка на минимальную длину телефона
+
                 if (Supplier.Phone.Length < 5)
                 {
                     MessageBox.Show("Номер телефона слишком короткий", "Ошибка",
@@ -76,7 +75,6 @@ namespace GOZON.Views.Main.Windows
                 }
             }
 
-            // Проверка длины других полей
             if (Supplier.ContactPerson?.Length > 100)
             {
                 MessageBox.Show("Имя контактного лица не должно превышать 100 символов", "Ошибка",
@@ -100,7 +98,7 @@ namespace GOZON.Views.Main.Windows
                 {
                     if (IsEditMode)
                     {
-                        // Обновление существующего поставщика
+
                         cmd.CommandText = @"
                             UPDATE Suppliers 
                             SET Name = @name, 
@@ -112,7 +110,7 @@ namespace GOZON.Views.Main.Windows
                     }
                     else
                     {
-                        // Добавление нового поставщика
+
                         cmd.CommandText = @"
                             INSERT INTO Suppliers (Name, ContactPerson, Phone, Email, Address)
                             VALUES (@name, @contactPerson, @phone, @email, @address);

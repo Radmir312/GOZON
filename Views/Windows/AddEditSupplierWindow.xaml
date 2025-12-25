@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="Добавить поставщика" 
-        Height="450" 
+        Height="389" 
         Width="450"
         WindowStartupLocation="CenterOwner"
         ResizeMode="NoResize">
@@ -25,66 +25,71 @@
         </Style>
     </Window.Resources>
 
-    <Grid Margin="10">
+    <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <!-- Название -->
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <!-- Контакт -->
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <!-- Телефон -->
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <!-- Email -->
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <!-- Адрес -->
             <RowDefinition Height="*"/>
-            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <!-- Кнопки -->
         </Grid.RowDefinitions>
 
         <!-- Название -->
         <TextBlock Grid.Row="0" Text="Название компании:*"/>
-        <TextBox Grid.Row="1" 
-                 x:Name="NameTextBox" 
-                 Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="1"
+             x:Name="NameTextBox"
+             Text="{Binding Name, UpdateSourceTrigger=PropertyChanged}"/>
 
         <!-- Контактное лицо -->
         <TextBlock Grid.Row="2" Text="Контактное лицо:"/>
-        <TextBox Grid.Row="3" 
-                 x:Name="ContactPersonTextBox" 
-                 Text="{Binding ContactPerson, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="3"
+             x:Name="ContactPersonTextBox"
+             Text="{Binding ContactPerson, UpdateSourceTrigger=PropertyChanged}"/>
 
         <!-- Телефон -->
         <TextBlock Grid.Row="4" Text="Телефон:"/>
-        <TextBox Grid.Row="5" 
-                 x:Name="PhoneTextBox" 
-                 Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="5"
+             x:Name="PhoneTextBox"
+             Text="{Binding Phone, UpdateSourceTrigger=PropertyChanged}"/>
 
         <!-- Email -->
         <TextBlock Grid.Row="6" Text="Email:"/>
-        <TextBox Grid.Row="7" 
-                 x:Name="EmailTextBox" 
-                 Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
+        <TextBox Grid.Row="7"
+             x:Name="EmailTextBox"
+             Text="{Binding Email, UpdateSourceTrigger=PropertyChanged}"/>
 
         <!-- Адрес -->
         <TextBlock Grid.Row="8" Text="Адрес:"/>
-        <TextBox Grid.Row="9" 
-                 x:Name="AddressTextBox" 
-                 Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"
-                 Height="60"
-                 TextWrapping="Wrap"
-                 AcceptsReturn="True"
-                 VerticalScrollBarVisibility="Auto"/>
+        <TextBox Grid.Row="9"
+             x:Name="AddressTextBox"
+             Text="{Binding Address, UpdateSourceTrigger=PropertyChanged}"
+             TextWrapping="Wrap"
+             AcceptsReturn="True"
+             VerticalScrollBarVisibility="Auto"/>
 
         <!-- Кнопки -->
-        <StackPanel Grid.Row="10" 
-                    Orientation="Horizontal" 
-                    HorizontalAlignment="Right" 
-                    Margin="0,10,0,0">
-            <Button x:Name="SaveButton" 
-                    Content="Сохранить" 
-                    Click="SaveButton_Click" 
-                    IsDefault="True"/>
-            <Button Content="Отмена" 
-                    Click="CancelButton_Click" 
-                    IsCancel="True"/>
+        <StackPanel Grid.Row="10"
+                Orientation="Horizontal"
+                HorizontalAlignment="Right"
+                Margin="0,10,0,0">
+            <Button Content="Сохранить"
+                Click="SaveButton_Click"
+                IsDefault="True"/>
+            <Button Content="Отмена"
+                Click="CancelButton_Click"
+                IsCancel="True"/>
         </StackPanel>
     </Grid>
 </Window>

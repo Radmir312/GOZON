@@ -16,7 +16,6 @@ namespace GOZON.Views.Main.Windows
 
         private void Page_Loaded(object sender, RoutedEventArgs e)
         {
-            // При загрузке страницы покажем отчёт по остаткам
             GenerateStockReport();
         }
 
