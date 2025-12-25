@@ -15,6 +15,7 @@ namespace GOZON.Views.Main.Windows
         private int selectedWarehouseId;
         private int quantity;
         private string reason;
+        private Dictionary<int, Dictionary<int, int>> warehouseStock = new Dictionary<int, Dictionary<int, int>>();
 
         public OutgoingMovementWindow()
         {
@@ -29,7 +30,7 @@ namespace GOZON.Views.Main.Windows
                 using (var conn = Database.Open())
                 using (var cmd = conn.CreateCommand())
                 {
-
+                    // Загружаем товары
                     var products = new List<Product>();
                     cmd.CommandText = "SELECT Id, Name, SKU FROM Products ORDER BY Name";
                     using (var reader = cmd.ExecuteReader())
@@ -60,6 +61,25 @@ namespace GOZON.Views.Main.Windows
                         }
                     }
 
+                    // Загружаем остатки товаров
+                    cmd.CommandText = "SELECT ProductId, WarehouseId, Quantity FROM Stock";
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            int productId = reader.GetInt32(0);
+                            int warehouseId = reader.GetInt32(1);
+                            int quantity = reader.GetInt32(2);
+
+                            if (!warehouseStock.ContainsKey(productId))
+                            {
+                                warehouseStock[productId] = new Dictionary<int, int>();
+                            }
+
+                            warehouseStock[productId][warehouseId] = quantity;
+                        }
+                    }
+
                     Dispatcher.Invoke(() =>
                     {
                         ProductComboBox.ItemsSource = products;
@@ -72,8 +92,10 @@ namespace GOZON.Views.Main.Windows
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка загрузки данных: {ex.Message}",
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
                 Close();
             }
         }
@@ -103,17 +125,18 @@ namespace GOZON.Views.Main.Windows
                     stock = warehouseStock[selectedProductId][selectedWarehouseId];
                 }
 
-                        Dispatcher.Invoke(() =>
-                        {
-                            CurrentStockTextBlock.Text = stock.ToString();
+                Dispatcher.Invoke(() =>
+                {
+                    CurrentStockTextBlock.Text = stock.ToString();
 
-                // Меняем цвет если мало товара
-                if (stock < 10)
-                    CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Red;
-                else if (stock < 50)
-                    CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Orange;
-                else
-                    CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Green;
+                    // Меняем цвет если мало товара
+                    if (stock < 10)
+                        CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Red;
+                    else if (stock < 50)
+                        CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Orange;
+                    else
+                        CurrentStockTextBlock.Foreground = System.Windows.Media.Brushes.Green;
+                });
             }
         }
 
@@ -125,34 +148,40 @@ namespace GOZON.Views.Main.Windows
 
         private void SaveButton_Click(object sender, RoutedEventArgs e)
         {
-
+            // Валидация
             if (ProductComboBox.SelectedItem == null)
             {
-                MessageBox.Show("Выберите товар", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Выберите товар",
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
                 ProductComboBox.Focus();
                 return;
             }
 
             if (WarehouseComboBox.SelectedItem == null)
             {
-                MessageBox.Show("Выберите склад", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Выберите склад",
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
                 WarehouseComboBox.Focus();
                 return;
             }
 
             if (!int.TryParse(QuantityTextBox.Text, out quantity) || quantity <= 0)
             {
-                MessageBox.Show("Введите корректное количество (больше 0)", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                MessageBox.Show("Введите корректное количество (больше 0)",
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
                 QuantityTextBox.Focus();
                 return;
             }
 
             selectedProductId = ((Product)ProductComboBox.SelectedItem).Id;
             selectedWarehouseId = ((Warehouse)WarehouseComboBox.SelectedItem).Id;
-            reason = ReasonTextBox.Text;
+            reason = ReasonTextBox.Text.Trim();
 
             // Проверка наличия достаточного количества товара
             int availableStock = 0;
@@ -162,13 +191,15 @@ namespace GOZON.Views.Main.Windows
                 availableStock = warehouseStock[selectedProductId][selectedWarehouseId];
             }
 
-                    if (quantity > availableStock)
-                    {
-                        MessageBox.Show($"Недостаточно товара на складе. Доступно: {availableStock}",
-                            "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
-                        QuantityTextBox.Focus();
-                        return;
-                    }
+            if (quantity > availableStock)
+            {
+                MessageBox.Show($"Недостаточно товара на складе. Доступно: {availableStock}",
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
+                QuantityTextBox.Focus();
+                return;
+            }
 
             try
             {
@@ -188,12 +219,12 @@ namespace GOZON.Views.Main.Windows
                                 VALUES (@productId, @warehouseId, @quantity, 'OUT', @userId);
                                 SELECT last_insert_rowid();";
 
-                                cmd.Parameters.AddWithValue("@productId", selectedProductId);
-                                cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
-                                cmd.Parameters.AddWithValue("@quantity", quantity);
-                                cmd.Parameters.AddWithValue("@userId", userId);
+                            cmd.Parameters.AddWithValue("@productId", selectedProductId);
+                            cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
+                            cmd.Parameters.AddWithValue("@quantity", quantity);
+                            cmd.Parameters.AddWithValue("@userId", userId);
 
-                                int movementId = Convert.ToInt32(cmd.ExecuteScalar());
+                            int movementId = Convert.ToInt32(cmd.ExecuteScalar());
 
                             // Добавляем причину в историю если указана
                             if (!string.IsNullOrWhiteSpace(reason))
@@ -203,13 +234,13 @@ namespace GOZON.Views.Main.Windows
                                     (Entity, EntityId, Action, NewValue, UserId)
                                     VALUES ('Movement', @movementId, 'OUTGOING', @reason, @userId)";
 
-                                    cmd.Parameters.Clear();
-                                    cmd.Parameters.AddWithValue("@movementId", movementId);
-                                    cmd.Parameters.AddWithValue("@reason", $"Причина: {reason}");
-                                    cmd.Parameters.AddWithValue("@userId", userId);
-                                    cmd.ExecuteNonQuery();
-                                }
+                                cmd.Parameters.Clear();
+                                cmd.Parameters.AddWithValue("@movementId", movementId);
+                                cmd.Parameters.AddWithValue("@reason", $"Причина: {reason}");
+                                cmd.Parameters.AddWithValue("@userId", userId);
+                                cmd.ExecuteNonQuery();
                             }
+                        }
 
                         // 2. Уменьшаем остатки на складе
                         using (var cmd = conn.CreateCommand())
@@ -219,11 +250,11 @@ namespace GOZON.Views.Main.Windows
                                 SET Quantity = Quantity - @quantity
                                 WHERE ProductId = @productId AND WarehouseId = @warehouseId";
 
-                                cmd.Parameters.AddWithValue("@productId", selectedProductId);
-                                cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
-                                cmd.Parameters.AddWithValue("@quantity", quantity);
+                            cmd.Parameters.AddWithValue("@productId", selectedProductId);
+                            cmd.Parameters.AddWithValue("@warehouseId", selectedWarehouseId);
+                            cmd.Parameters.AddWithValue("@quantity", quantity);
 
-                                int rowsAffected = cmd.ExecuteNonQuery();
+                            int rowsAffected = cmd.ExecuteNonQuery();
 
                             if (rowsAffected == 0)
                             {
@@ -233,22 +264,30 @@ namespace GOZON.Views.Main.Windows
                             }
                         }
 
-                            transaction.Commit();
-                            DialogResult = true;
-                            Close();
-                        }
-                        catch (Exception ex)
+                        // Обновляем локальный словарь остатков
+                        if (warehouseStock.ContainsKey(selectedProductId) &&
+                            warehouseStock[selectedProductId].ContainsKey(selectedWarehouseId))
                         {
-                            transaction.Rollback();
-                            throw;
+                            warehouseStock[selectedProductId][selectedWarehouseId] -= quantity;
                         }
+
+                        transaction.Commit();
+                        DialogResult = true;
+                        Close();
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.Rollback();
+                        throw;
                     }
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Ошибка сохранения отгрузки: {ex.Message}", "Ошибка",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
+                MessageBox.Show($"Ошибка сохранения отгрузки: {ex.Message}",
+                    "Ошибка",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Error);
             }
         }
 

@@ -66,9 +66,6 @@ namespace GOZON
                 case "Отчёты":
                     NavigateToPage(new ReportsPage());
                     break;
-                case "История":
-                    NavigateToPage(new HistoryPage());
-                    break;
             }
         }
     }

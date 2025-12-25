@@ -39,21 +39,17 @@ namespace GOZON
 
         private void RegisterButton_Click(object sender, RoutedEventArgs e)
         {
-
             string fullName = FullNameTextBox.Text.Trim();
             string email = EmailTextBox.Text.Trim();
             string login = LoginTextBox.Text.Trim();
             string password = PasswordBox.Password;
             string confirmPassword = ConfirmPasswordBox.Password;
 
-
             if (!ValidateRequiredFields(fullName, login, password, confirmPassword))
                 return;
 
-
             if (!ValidateDataFormat(fullName, login, password))
                 return;
-
 
             if (!string.IsNullOrWhiteSpace(email))
             {
@@ -73,7 +69,6 @@ namespace GOZON
             using (var conn = Database.Open())
             using (var cmd = conn.CreateCommand())
             {
-
                 cmd.CommandText = "SELECT COUNT(*) FROM Users WHERE Login = @login";
                 cmd.Parameters.AddWithValue("@login", login);
 
@@ -103,7 +98,6 @@ namespace GOZON
                         return;
                     }
                 }
-
 
                 cmd.CommandText = @"
                     INSERT INTO Users (Login, PasswordHash, FullName, Email, CreatedAt)
@@ -208,17 +202,13 @@ namespace GOZON
 
             try
             {
-
                 var pattern = @"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$";
-
 
                 if (!Regex.IsMatch(email, pattern))
                     return false;
 
-
                 if (email.Length > 254)
                     return false;
-
 
                 int atIndex = email.IndexOf('@');
                 if (atIndex <= 0 || atIndex == email.Length - 1)
@@ -227,39 +217,30 @@ namespace GOZON
                 string localPart = email.Substring(0, atIndex);
                 string domainPart = email.Substring(atIndex + 1);
 
-
                 if (localPart.Length > 64)
                     return false;
-
 
                 if (localPart.StartsWith(".") || localPart.EndsWith("."))
                     return false;
 
-
                 if (localPart.Contains(".."))
                     return false;
-
 
                 if (domainPart.Length > 253)
                     return false;
 
-
                 if (!domainPart.Contains("."))
                     return false;
-
 
                 if (domainPart.StartsWith(".") || domainPart.EndsWith("."))
                     return false;
 
-
                 if (domainPart.Contains(".."))
                     return false;
-
 
                 string tld = domainPart.Substring(domainPart.LastIndexOf('.') + 1);
                 if (tld.Length < 2)
                     return false;
-
 
                 if (!Regex.IsMatch(domainPart, @"^[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*\.[a-zA-Z]{2,}$"))
                     return false;
@@ -280,10 +261,9 @@ namespace GOZON
                 EmailTextBox.CaretIndex = 100;
             }
 
-
             string email = EmailTextBox.Text.Trim();
             if (!string.IsNullOrEmpty(email))
-
+            {
                 bool isValid = IsValidEmail(email);
                 EmailTextBox.BorderBrush = isValid ?
                     System.Windows.Media.Brushes.Green :
@@ -291,7 +271,6 @@ namespace GOZON
             }
             else
             {
-
                 EmailTextBox.ClearValue(BorderBrushProperty);
             }
         }
@@ -310,17 +289,17 @@ namespace GOZON
             Close();
         }
 
-        private void TextBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 MoveToNextControl(sender as UIElement);
             }
         }
 
-        private void PasswordBox_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private void PasswordBox_KeyDown(object sender, KeyEventArgs e)
         {
-            if (e.Key == System.Windows.Input.Key.Enter)
+            if (e.Key == Key.Enter)
             {
                 MoveToNextControl(sender as UIElement);
             }
@@ -328,7 +307,7 @@ namespace GOZON
 
         private void MoveToNextControl(UIElement currentControl)
         {
-            var request = new TraversalRequest(System.Windows.Input.FocusNavigationDirection.Next);
+            var request = new TraversalRequest(FocusNavigationDirection.Next);
             currentControl.MoveFocus(request);
         }
     }
