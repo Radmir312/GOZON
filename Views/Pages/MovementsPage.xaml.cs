@@ -185,36 +185,39 @@ namespace GOZON.Views.Main.Windows
 
         private void CreateIncoming_Click(object sender, RoutedEventArgs e)
         {
-
             var window = new AddDeliveryWindow();
             if (window.ShowDialog() == true)
             {
                 MessageBox.Show("Приход товара успешно оформлен",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                    "Успех",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 LoadMovements();
             }
         }
 
         private void CreateOutgoing_Click(object sender, RoutedEventArgs e)
         {
-
             var window = new OutgoingMovementWindow();
             if (window.ShowDialog() == true)
             {
                 MessageBox.Show("Отгрузка товара успешно оформлена",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                    "Успех",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 LoadMovements();
             }
         }
 
         private void CreateTransfer_Click(object sender, RoutedEventArgs e)
         {
-
             var window = new TransferMovementWindow();
             if (window.ShowDialog() == true)
             {
                 MessageBox.Show("Перемещение товара успешно оформлено",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                    "Успех",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 LoadMovements();
             }
         }

@@ -74,7 +74,9 @@ namespace GOZON.Views.Main.Windows
             if (window.ShowDialog() == true)
             {
                 MessageBox.Show("Склад успешно добавлен",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                    "Успех", // Добавлен заголовок
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 LoadWarehouses();
             }
         }
@@ -87,7 +89,9 @@ namespace GOZON.Views.Main.Windows
                 if (window.ShowDialog() == true)
                 {
                     MessageBox.Show("Склад успешно обновлен",
-                        MessageBoxButton.OK, MessageBoxImage.Information);
+                        "Успех", // Добавлен заголовок
+                        MessageBoxButton.OK,
+                        MessageBoxImage.Information);
                     LoadWarehouses();
                 }
             }
@@ -143,7 +147,9 @@ namespace GOZON.Views.Main.Windows
                             cmd.ExecuteNonQuery();
 
                             MessageBox.Show("Склад успешно удален",
-                                MessageBoxButton.OK, MessageBoxImage.Information);
+                                "Успех", // Добавлен заголовок
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Information);
                             LoadWarehouses();
                         }
                     }

@@ -129,7 +129,9 @@ namespace GOZON.Views.Main.Windows
             if (window.ShowDialog() == true)
             {
                 MessageBox.Show("Поставка успешно добавлена",
-                    MessageBoxButton.OK, MessageBoxImage.Information);
+                    "Успех",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Information);
                 LoadDeliveries();
             }
         }
