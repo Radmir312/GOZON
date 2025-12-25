@@ -108,12 +108,14 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Database\Database.cs" />
+    <Compile Include="HistoryLogger.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="ResourceManager.cs" />
+    <Compile Include="SessionManager.cs" />
     <Compile Include="Views\Windows\AddDeliveryWindow.xaml.cs">
       <DependentUpon>AddDeliveryWindow.xaml</DependentUpon>
     </Compile>
